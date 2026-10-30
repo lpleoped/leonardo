@@ -1,0 +1,148 @@
+---
+import "../styles/global.css";
+import { sitio } from "../site";
+
+interface Props {
+  titulo: string;
+  tituloEn?: string;
+  descripcion: string;
+  imagen?: string;
+  prefetch?: string;
+}
+
+const { titulo, tituloEn, descripcion, imagen, prefetch } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imagenAbsoluta = imagen ? new URL(imagen, Astro.site).href : undefined;
+const path = Astro.url.pathname;
+const secciones = [
+  { href: "/acerca", label: "Mi historia", en: "My story" },
+  { href: "/contacto", label: "Contacto", en: "Contact" },
+];
+const redes = [
+  sitio.instagram ? { href: sitio.instagram, label: "Instagram" } : undefined,
+  sitio.behance ? { href: sitio.behance, label: "Behance" } : undefined,
+  sitio.linkedin ? { href: sitio.linkedin, label: "LinkedIn" } : undefined,
+  sitio.github ? { href: sitio.github, label: "GitHub" } : undefined,
+].filter((red) => red !== undefined);
+
+function vigente(href: string) {
+  if (href === "/trabajo") return path === "/trabajo" || path.startsWith("/trabajo/");
+  if (href === "/acerca") return path === "/acerca" || path.startsWith("/acerca/") || path.startsWith("/archivo/");
+  return path === href;
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#14110f" />
+    <title data-en={tituloEn}>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical.href} />
+    <meta property="og:locale" content="es_UY" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={sitio.nombre} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical.href} />
+    {imagenAbsoluta && <meta property="og:image" content={imagenAbsoluta} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descripcion} />
+    {imagenAbsoluta && <meta name="twitter:image" content={imagenAbsoluta} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {prefetch && <link rel="prefetch" href={prefetch} />}
+  </head>
+  <body>
+    <a class="saltar" href="#contenido" data-en="Skip to content">Saltar al contenido</a>
+    <header class="site-header">
+      <a
+        class="marca"
+        href="/"
+        aria-label={`${sitio.nombre}, inicio`}
+        data-en-aria-label={`${sitio.nombre}, home`}
+      >
+        {sitio.marca}<span class="marca-punto">.</span>
+      </a>
+      <nav class="nav" aria-label="Secciones" data-en-aria-label="Sections">
+        {
+          secciones.map((seccion) => (
+            <a href={seccion.href} aria-current={vigente(seccion.href) ? "page" : undefined} data-en={seccion.en}>
+              {seccion.label}
+            </a>
+          ))
+        }
+        <button
+          class="idioma"
+          type="button"
+          aria-label="ES / EN, read in English"
+          data-en-aria-label="ES / EN, ver en español"
+          data-idioma
+          hidden
+        >
+          <span lang="es">ES</span><span aria-hidden="true">/</span><span lang="en">EN</span>
+        </button>
+      </nav>
+    </header>
+    <main id="contenido">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <a class="footer-firma" href="/">{sitio.nombre}<span aria-hidden="true">↗</span></a>
+      <span data-en={sitio.lugarEn}>{sitio.lugar}</span>
+      <div class="footer-cierre">
+        <div class="footer-redes">
+          {
+            redes.map((red) => (
+              <a href={red.href}>{red.label} ↗</a>
+            ))
+          }
+        </div>
+      </div>
+    </footer>
+    <script is:inline>
+      (() => {
+        const raiz = document.documentElement;
+        const boton = document.querySelector("[data-idioma]");
+        const textos = [...document.querySelectorAll("[data-en]")].flatMap((elemento) => {
+          const nodo = [...elemento.childNodes].find(
+            (hijo) => hijo.nodeType === Node.TEXT_NODE && hijo.textContent.trim(),
+          );
+          if (!nodo) return [];
+          const es = nodo.textContent;
+          return [{ nodo, es, en: es.replace(es.trim(), () => elemento.dataset.en) }];
+        });
+        const atributos = ["aria-label", "alt"].flatMap((nombre) =>
+          [...document.querySelectorAll(`[data-en-${nombre}]`)].map((elemento) => ({
+            elemento,
+            nombre,
+            es: elemento.getAttribute(nombre),
+            en: elemento.getAttribute(`data-en-${nombre}`),
+          })),
+        );
+
+        function aplicar(idioma) {
+          raiz.lang = idioma;
+          for (const texto of textos) texto.nodo.textContent = texto[idioma];
+          for (const atributo of atributos) atributo.elemento.setAttribute(atributo.nombre, atributo[idioma]);
+        }
+
+        let guardado = null;
+        try {
+          guardado = localStorage.getItem("idioma");
+        } catch {}
+        if (guardado === "en") aplicar("en");
+
+        boton.hidden = false;
+        boton.addEventListener("click", () => {
+          const idioma = raiz.lang === "en" ? "es" : "en";
+          aplicar(idioma);
+          try {
+            localStorage.setItem("idioma", idioma);
+          } catch {}
+        });
+      })();
+    </script>
+  </body>
+</html>

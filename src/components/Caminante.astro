@@ -1,0 +1,24 @@
+---
+import { figuras } from "../lib/camino-visual";
+---
+
+<div class="caminante" aria-hidden="true">
+  {
+    figuras.map((figura) => (
+      <div
+        class:list={["etapa", `etapa-${figura.id}`, figura.pasos && "etapa-camina"]}
+        style={figura.pasos ? `--sprite: url("${figura.pasos.src}")` : undefined}
+      >
+        <img
+          class="etapa-estatica"
+          src={figura.quieto.src}
+          alt=""
+          width={figura.quieto.width}
+          height={figura.quieto.height}
+          decoding="async"
+        />
+        {figura.pasos && <span class="etapa-pasos" />}
+      </div>
+    ))
+  }
+</div>

@@ -1,0 +1,39 @@
+---
+import Base from "../layouts/Base.astro";
+import { sitio } from "../site";
+
+const canales = [
+  sitio.instagram
+    ? { href: sitio.instagram, nota: "Red", notaEn: "Social", nombre: "Instagram", clase: undefined }
+    : undefined,
+  sitio.behance
+    ? { href: sitio.behance, nota: "Archivo", notaEn: "Archive", nombre: "Behance", clase: undefined }
+    : undefined,
+  sitio.linkedin
+    ? { href: sitio.linkedin, nota: "Perfil", notaEn: "Profile", nombre: "LinkedIn", clase: undefined }
+    : undefined,
+  sitio.github
+    ? { href: sitio.github, nota: "Código", notaEn: "Code", nombre: "GitHub", clase: undefined }
+    : undefined,
+  sitio.email
+    ? { href: `mailto:${sitio.email}`, nota: "Correo", notaEn: "Email", nombre: sitio.email, clase: "contacto-mail" }
+    : undefined,
+].filter((canal) => canal !== undefined);
+---
+
+<Base titulo={`Contacto — ${sitio.nombre}`} tituloEn={`Contact — ${sitio.nombre}`} descripcion={sitio.frase}>
+  <div class="contacto-intro"><p class="eyebrow" data-en="Every idea starts with a chat">Toda idea empieza con una charla</p>
+  <h1 class="pagina-titulo" data-en="Let's make">Hagamos<br /><em data-en="things happen.">que suceda.</em></h1>
+  </div>
+  <div class="contacto">
+    {
+      canales.map((canal) => (
+        <a class={canal.clase} href={canal.href}>
+          <span data-en={canal.notaEn}>{canal.nota}</span>
+          {canal.nombre}
+          <span aria-hidden="true">↗</span>
+        </a>
+      ))
+    }
+  </div>
+</Base>

@@ -1,0 +1,111 @@
+---
+import Base from "../../layouts/Base.astro";
+import LugarMosaico from "../../components/LugarMosaico.astro";
+import { lugaresPublicados } from "../../lib/lugares";
+import { mosaicos } from "../../lib/lugar-mosaico";
+
+export async function getStaticPaths() {
+  const lugares = await lugaresPublicados();
+  return lugares.map((lugar) => ({
+    params: { slug: lugar.data.slug },
+    props: { id: lugar.id },
+  }));
+}
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const lugares = await lugaresPublicados();
+const indice = lugares.findIndex((lugar) => lugar.id === id);
+const lugar = lugares[indice];
+if (!lugar) {
+  throw new Error("Lugar no encontrado");
+}
+
+const anterior = indice > 0 ? lugares[indice - 1] : undefined;
+const siguiente = indice < lugares.length - 1 ? lugares[indice + 1] : undefined;
+const tieneMosaico = Boolean(mosaicos[lugar.data.slug]);
+
+function numero(posicion: number) {
+  return String(posicion + 1).padStart(2, "0");
+}
+---
+
+<Base
+  titulo={`${lugar.data.lugar} — Mi historia`}
+  tituloEn={`${lugar.data.lugarEn} — My story`}
+  descripcion={lugar.data.detalle}
+>
+  <article class="lugar">
+    <header class="lugar-cabecera">
+      <a class="lugar-volver" href="/acerca#recorrido" data-en="The path"><span aria-hidden="true">←</span>El recorrido</a>
+      <p class="paso-cuando lugar-epoca" data-en={lugar.data.cuandoEn}><span class="paso-numero">{numero(indice)}</span>{lugar.data.cuando}</p>
+      <h1 class="lugar-titulo" data-en={lugar.data.lugarEn}>{lugar.data.lugar}</h1>
+      <p class="lugar-detalle" data-en={lugar.data.detalleEn}>{lugar.data.detalle}</p>
+      {
+        lugar.data.hitos.length > 0 && (
+          <ul class:list={["lugar-hitos", !lugar.data.hitos.some((hito) => hito.cuando) && "paso-hitos-puntos"]}>
+            {lugar.data.hitos.map((hito) => (
+              <li>
+                {hito.cuando && <span class="paso-hito-cuando" data-en={hito.cuandoEn}>{hito.cuando}</span>}
+                <span data-en={hito.rolEn}>{hito.rol}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      {lugar.data.bajada && <p class="lugar-bajada" data-en={lugar.data.bajadaEn}>{lugar.data.bajada}</p>}
+      {lugar.data.nota && <p class="paso-nota lugar-nota" data-en={lugar.data.notaEn}>{lugar.data.nota}</p>}
+      {
+        lugar.data.enlace && lugar.data.enlaceEtiqueta && (
+          <p class="lugar-enlace">
+            <a
+              class="detras-enlace"
+              href={lugar.data.enlace}
+              rel="noopener noreferrer"
+              target="_blank"
+              data-en={lugar.data.enlaceEtiquetaEn}
+            >
+              {lugar.data.enlaceEtiqueta}<span aria-hidden="true"> ↗</span>
+            </a>
+          </p>
+        )
+      }
+    </header>
+    {tieneMosaico && <LugarMosaico slug={lugar.data.slug} />}
+    <ol class="lugar-escenas">
+      {
+        lugar.data.escenas.map((escena) => (
+          <li id={escena.id}>
+            <h2 data-en={escena.tituloEn}>{escena.titulo}</h2>
+            <p data-en={escena.textoEn}>{escena.texto}</p>
+          </li>
+        ))
+      }
+    </ol>
+    {
+      (anterior || siguiente) && (
+        <nav class="lugar-vecinos" aria-label="Otros lugares" data-en-aria-label="Other places">
+          {
+            anterior && (
+              <a class="lugar-vecino" href={`/acerca/${anterior.data.slug}`} data-en={anterior.data.lugarEn}>
+                <span class="paso-numero">{numero(indice - 1)}</span>
+                {anterior.data.lugar}
+              </a>
+            )
+          }
+          {
+            siguiente && (
+              <a class="lugar-vecino lugar-vecino-siguiente" href={`/acerca/${siguiente.data.slug}`} data-en={siguiente.data.lugarEn}>
+                <span class="paso-numero">{numero(indice + 1)}</span>
+                {siguiente.data.lugar}
+              </a>
+            )
+          }
+        </nav>
+      )
+    }
+  </article>
+</Base>

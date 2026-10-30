@@ -1,0 +1,120 @@
+---
+import { Image } from "astro:assets";
+import abuela from "../assets/estudio/leo-abuela.jpg";
+import lolo from "../assets/estudio/leo-y-lolo.png";
+import bebe from "../assets/estudio/leo-bebe.jpg";
+import adolescente from "../assets/estudio/leo-adolescente.png";
+import mama from "../assets/estudio/leo-mama.jpg";
+import chiquito from "../assets/estudio/leo-chiquito.jpg";
+import sillon from "../assets/estudio/leo-sillon.png";
+import familia from "../assets/estudio/leo-familia.jpg";
+
+const fotos = [
+  {
+    clase: "abuela",
+    lado: "izquierdo",
+    src: abuela,
+    etiqueta: "Mover la foto con mi abuela",
+    etiquetaEn: "Move the photo with my grandmother",
+  },
+  {
+    clase: "lolo",
+    lado: "izquierdo",
+    src: lolo,
+    etiqueta: "Mover la foto con Lolo",
+    etiquetaEn: "Move the photo with Lolo",
+  },
+  {
+    clase: "bebe",
+    lado: "izquierdo",
+    src: bebe,
+    etiqueta: "Mover mi foto de bebé",
+    etiquetaEn: "Move my baby photo",
+  },
+  {
+    clase: "adolescente",
+    lado: "derecho",
+    src: adolescente,
+    etiqueta: "Mover mi foto de adolescente",
+    etiquetaEn: "Move my teenage photo",
+  },
+  {
+    clase: "mama",
+    lado: "derecho",
+    src: mama,
+    etiqueta: "Mover la foto con mi mamá",
+    etiquetaEn: "Move the photo with my mom",
+  },
+  {
+    clase: "chiquito",
+    lado: "derecho",
+    src: chiquito,
+    etiqueta: "Mover mi foto de chico",
+    etiquetaEn: "Move my childhood photo",
+  },
+  {
+    clase: "sillon",
+    lado: "izquierdo",
+    src: sillon,
+    etiqueta: "Mover la foto del sillón",
+    etiquetaEn: "Move the couch photo",
+  },
+  {
+    clase: "familia",
+    lado: "derecho",
+    src: familia,
+    etiqueta: "Mover la foto en familia",
+    etiquetaEn: "Move the family photo",
+  },
+];
+---
+
+<aside
+  class="estudio-flotante"
+  aria-label="Fotos sobre la mesa"
+  data-en-aria-label="Photos on the table"
+  data-estudio
+>
+  <div class="estudio-mesa" data-estudio-mesa>
+    {
+      fotos.map(({ clase, lado, src, etiqueta, etiquetaEn }) => (
+        <button
+          class={`estudio-recorte estudio-recorte--${clase}`}
+          type="button"
+          aria-label={etiqueta}
+          data-en-aria-label={etiquetaEn}
+          aria-describedby="estudio-instrucciones"
+          data-estudio-recorte
+          data-lado={lado}
+        >
+          <span class="estudio-cinta" aria-hidden="true" />
+          <Image
+            src={src}
+            alt=""
+            widths={[240, 480]}
+            sizes="(max-width: 40rem) 32vw, 10rem"
+            format="webp"
+            quality={80}
+            loading="lazy"
+            decoding="async"
+          />
+        </button>
+      ))
+    }
+    <p
+      class="estudio-instrucciones"
+      id="estudio-instrucciones"
+      data-en="The photos drift gently on their own. Rest the cursor on one and that drift stops: you can nudge it or drag it. On a phone, slide your finger across a photo to move it. With the keyboard, use the arrows to move it, Enter to give it a push and Escape to send it back to its place. The photos stay within the edges of the page and clear of the name."
+    >
+      Las fotos se mueven suave solas. Si dejás el cursor sobre una, ese movimiento
+      se detiene: podés empujarla o arrastrarla. En el teléfono, deslizá el dedo sobre
+      una foto para moverla. Con teclado, usá las flechas para moverla, Enter para darle
+      un impulso y Escape para devolverla a su lugar. Las fotos se mantienen en los bordes
+      de la página y fuera del nombre.
+    </p>
+  </div>
+</aside>
+
+<script>
+  import "../scripts/estudio";
+</script>

@@ -1,0 +1,56 @@
+---
+import { Image } from "astro:assets";
+import { recomendaciones, recomendacionesUrl } from "../lib/recomendaciones";
+---
+
+<section class="voces" id="voces" aria-labelledby="voces-titulo">
+  <div class="voces-cabecera">
+    <p class="voces-indice" data-en="LinkedIn">LinkedIn</p>
+    <h2 class="voces-titulo" id="voces-titulo" tabindex="-1" data-en="What they say.">Lo que dicen.</h2>
+    <p class="voces-nota" data-en="Recommendations written on LinkedIn. Each name opens the profile.">
+      Recomendaciones escritas en LinkedIn. Cada nombre abre el perfil.
+    </p>
+  </div>
+  <div class="voces-carrusel" tabindex="0" aria-label="Carrusel de recomendaciones" data-en-aria-label="Recommendations carousel">
+    <ul class="voces-pista">
+      {
+        recomendaciones.map((voz) => (
+          <li class="voz">
+            <article class="voz-captura">
+              <header class="voz-cabeza">
+                <Image
+                  class="voz-foto"
+                  src={voz.foto}
+                  alt=""
+                  width={80}
+                  height={80}
+                  densities={[1, 2]}
+                  format="webp"
+                  quality={82}
+                />
+                <div class="voz-meta">
+                  <p class="voz-nombre">
+                    <a href={voz.perfil} target="_blank" rel="noopener noreferrer">{voz.nombre}</a>
+                  </p>
+                  <p class="voz-rol">{voz.rol}</p>
+                  <p class="voz-relacion">
+                    <span>{voz.fecha}, </span>
+                    <span data-en={voz.relacionEn}>{voz.relacion}</span>
+                  </p>
+                </div>
+              </header>
+              <div class="voz-cuerpo">
+                {voz.texto.split("\n\n").map((parrafo) => (
+                  <p>{parrafo}</p>
+                ))}
+              </div>
+              <a class="voz-verificar" href={recomendacionesUrl} target="_blank" rel="noopener noreferrer" data-en="Verify on LinkedIn ↗">
+                Verificar en LinkedIn <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

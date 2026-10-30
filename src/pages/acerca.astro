@@ -1,0 +1,205 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Caminante from "../components/Caminante.astro";
+import Diamante from "../components/Diamante.astro";
+import PasoFondo from "../components/PasoFondo.astro";
+import Voces from "../components/Voces.astro";
+import retrato from "../assets/estudio/leo-guitarra.jpg";
+import retratoHoy from "../assets/estudio/leo-hoy.jpg";
+import rocasHoy from "../assets/estudio/marco-rosa-rocas-hoy.webp";
+import { cssDelCamino, escenas } from "../lib/camino-visual";
+import { lugaresPublicados } from "../lib/lugares";
+import { sitio } from "../site";
+
+const pasos = await lugaresPublicados();
+---
+
+<Base
+  titulo={`Mi historia — ${sitio.nombre}`}
+  tituloEn={`My story — ${sitio.nombre}`}
+  descripcion="De 1994 hasta hoy: las piezas, el recorrido y cómo miro el oficio."
+>
+  <section class="biografia" aria-labelledby="biografia-titulo">
+    <div class="biografia-texto">
+      <p class="biografia-indice" data-en={`My story · ${sitio.lugarEn.replace(/\.$/, "")}`}>Mi historia · {sitio.lugar.replace(/\.$/, "")}</p>
+      <h1 id="biografia-titulo" class="biografia-titulo" data-en="From 1994">De 1994 <em data-en="to today.">hasta hoy.</em></h1>
+      <div class="biografia-bloque">
+        <p class="biografia-entrada" data-en="Hi. I've been working in software for more than ten years.">Hola. Hace más de diez años que trabajo en software.</p>
+        <p
+          class="biografia-parrafo"
+          data-en="I started as a QA. If software quality left me with anything, it's walking around with my eyes wide open: understanding what should happen, questioning what doesn't add up, and thinking about what I can build so it actually serves someone. Having an idea is one thing. Making it work is another."
+        >
+          Empecé como QA. Si hay algo que me dejó la calidad, es andar con los ojos bien abiertos: entender qué debería pasar, cuestionar lo que no termina de cerrar y pensar qué construir para que realmente le sirva a alguien. Porque una cosa es tener una idea y otra es hacer que funcione.
+        </p>
+        <p class="biografia-parrafo">
+          <span data-en="Here I only show some pieces and the path. ">Acá solo muestro algunas piezas y el recorrido. </span>
+          <a href="#detras" data-en="Further down">Más abajo</a>
+          <span data-en=" you'll find others, more personal, that are part of me too. The craft lives in what got made. The story behind all that is something else."> encontrarás otras, más personales, que también me integran. Porque una cosa es el oficio, que se ve en lo hecho. Y otra, la historia detrás de todo eso.</span>
+        </p>
+        <p
+          class="biografia-parrafo"
+          data-en="And if there's something I enjoy as much as building, it's sharing it. I love that spark when someone gets excited about an idea. When a team dares to try, to get it wrong, to learn and try again. Win or lose, I stay with the ones who step onto the field and give it everything."
+        >
+          Y si hay algo que disfruto tanto como construir, es compartirlo. Me encanta ese brillo cuando alguien se entusiasma con una idea. Cuando un equipo se anima a probar, a equivocarse, a aprender y volver a intentar. Ganemos o perdamos, me quedo con los que entran a la cancha y lo dan todo.
+        </p>
+      </div>
+    </div>
+    <div class="biografia-archivos">
+    <figure class="biografia-archivo biografia-archivo--entonces">
+      <span class="biografia-cinta" aria-hidden="true"></span>
+      <Image
+        class="biografia-foto"
+        src={retrato}
+        alt="Leonardo de niño con una guitarra de juguete"
+        data-en-alt="Leonardo as a child with a toy guitar"
+        widths={[360, 560, 800]}
+        sizes="(max-width: 40rem) min(76vw, 17rem), 18.5rem"
+        format="webp"
+        quality={80}
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption><span data-en="Personal archive">Archivo personal</span><span data-en="Yesterday">Ayer</span></figcaption>
+      <svg class="biografia-flor" viewBox="0 0 220 432" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke-width="1.2" d="M186 8a14 14 0 1 0 1 28 10.5 10.5 0 1 1-1-28z" />
+          <path stroke-width="1.15" d="M208 36l2.2 6.4 6.8 2.2-6.8 2.2-2.2 6.4-2.2-6.4-6.8-2.2 6.8-2.2z" />
+          <path stroke-width="1.45" d="M152 102Q146 58 172 34Q198 56 184 102Q168 88 152 102z" />
+          <path stroke-width="0.9" d="M160 92Q170 58 180 78" />
+          <path stroke-width="1.45" d="M168 92Q206 62 210 102Q204 128 176 114Q164 104 168 92z" />
+          <path stroke-width="0.9" d="M178 100Q196 96 198 112" />
+          <path stroke-width="1.45" d="M174 112Q214 124 196 160Q174 176 160 146Q164 122 174 112z" />
+          <path stroke-width="0.9" d="M172 128Q186 146 192 132" />
+          <path stroke-width="1.45" d="M150 118Q132 150 158 172Q188 178 190 142Q176 132 150 118z" />
+          <path stroke-width="0.9" d="M158 136Q168 158 184 150" />
+          <path stroke-width="1.45" d="M148 96Q118 92 120 128Q128 158 156 140Q150 114 148 96z" />
+          <path stroke-width="0.9" d="M136 112Q132 132 148 128" />
+          <path stroke-width="1.35" d="M156 96Q146 108 156 122Q170 130 172 110Q168 96 156 96z" />
+          <path stroke-width="1.35" d="M172 90Q192 96 184 116Q170 124 164 108Q166 94 172 90z" />
+          <path stroke-width="1.25" d="M160 104Q158 90 172 88Q186 90 182 106Q174 118 164 108Q160 102 168 100" />
+          <path stroke-width="1.35" d="M156 166Q146 182 162 176M174 168Q188 186 196 170M164 170Q162 188 176 184" />
+          <path stroke-width="1.85" d="M172 174C188 214 200 258 182 302C166 340 184 362 168 388" />
+          <path stroke-width="1.25" d="M190 236l8-6M191 238l6 7M172 300l-8-6M171 302l-6 7" />
+          <path stroke-width="1.4" d="M168 206C154 196 140 206 146 220C152 234 166 228 172 214C170 206 170 204 168 206Z" />
+          <path stroke-width="0.85" d="M168 210L150 216" />
+          <path stroke-width="1.4" d="M184 252C202 234 222 244 214 262C206 278 188 270 182 256C184 250 184 250 184 252Z" />
+          <path stroke-width="0.85" d="M186 254L212 254" />
+          <path stroke-width="1.4" d="M174 318C158 306 140 318 148 334C156 348 172 340 176 324C174 316 174 316 174 318Z" />
+          <path stroke-width="0.85" d="M172 322L152 326" />
+          <path stroke-width="1.45" d="M108 404L136 386L172 380L198 394L192 422L140 428L104 414Z" />
+          <path stroke-width="1.05" d="M136 386L146 410L116 414M172 380L160 412L148 428M146 410L160 406L184 396" />
+          <path stroke-width="0.75" d="M116 400L140 390M112 408L142 396M118 416L138 406" />
+          <path stroke-width="1.45" d="M22 408L52 392L100 402L92 424L48 430L18 418Z" />
+          <path stroke-width="1.05" d="M52 392L60 414L48 430M32 404L86 398M28 414L80 406M40 396L46 404L36 412L50 420" />
+          <path stroke-width="1.45" d="M184 396L210 384L216 404L198 418L180 408Z" />
+          <path stroke-width="1.05" d="M210 384L196 406L180 408M194 392L210 402" />
+          <path stroke-width="0.75" d="M190 402L206 396M188 410L202 404" />
+          <path stroke-width="1.2" d="M8 420L20 414L14 428ZM204 416L216 412L210 426ZM70 426L84 422L76 432Z" />
+        </g>
+      </svg>
+    </figure>
+    <figure class="biografia-archivo biografia-archivo--hoy">
+      <span class="biografia-cinta" aria-hidden="true"></span>
+      <Image
+        class="biografia-foto"
+        src={retratoHoy}
+        alt="Leonardo Pedreira, retrato de hoy"
+        data-en-alt="Leonardo Pedreira, present-day portrait"
+        widths={[360, 560, 800]}
+        sizes="(max-width: 40rem) min(76vw, 17rem), 18.5rem"
+        format="webp"
+        quality={80}
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption><span data-en="Personal archive">Archivo personal</span><span data-en="Today">Hoy</span></figcaption>
+      <span class="biografia-rocas" aria-hidden="true">
+        <Image
+          src={rocasHoy}
+          alt=""
+          widths={[180, 280, 360]}
+          sizes="(max-width: 40rem) 28vw, 8rem"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </span>
+    </figure>
+    </div>
+    <a class="salto-viaje historia-salto" href="#recorrido" data-viaje="recorrido-titulo" data-en="The path.">
+      <span aria-hidden="true">↓</span>
+      El recorrido.
+    </a>
+  </section>
+  <section class="camino" id="recorrido" aria-label="Trayecto" data-en-aria-label="Journey" style={`--pasos: ${pasos.length}`}>
+    <div class="camino-recorrido">
+      <div class="camino-ventana">
+        <div class="camino-fijo">
+          <div>
+            <p class="camino-indice" data-en="The path">El recorrido</p>
+            <h2 class="camino-titulo" id="recorrido-titulo" tabindex="-1" data-en="One thing led to another.">Una cosa llevó a la otra.</h2>
+          </div>
+            <p class="camino-desde"><span data-en="Learn, test,">Aprender, probar,</span><br /><span data-en="keep going.">seguir andando.</span></p>
+        </div>
+        <div class="camino-figura" aria-hidden="true">
+          <div class="caminante-bob">
+            <Caminante />
+          </div>
+        </div>
+        <ol class="camino-relato">
+          {
+            pasos.map((paso, indice) => (
+              <li>
+                <div class="paso-escena">
+                  <PasoFondo escena={escenas[paso.data.slug]} />
+                </div>
+                <div class="paso-texto">
+                  <p class="paso-cuando" data-en={paso.data.cuandoEn}><span class="paso-numero">{String(indice + 1).padStart(2, "0")}</span>{paso.data.cuando}</p>
+                  <h3 class="paso-lugar"><a href={`/acerca/${paso.data.slug}`} data-en={paso.data.lugarEn}>{paso.data.lugar}</a></h3>
+                  {
+                    paso.data.slug !== "tiendamia" && (
+                      <p class="paso-detalle" data-en={paso.data.detalleEn}>{paso.data.detalle}</p>
+                    )
+                  }
+                  {
+                    paso.data.hitos.length > 0 && (
+                      <ol class:list={["paso-hitos", !paso.data.hitos.some((hito) => hito.cuando) && "paso-hitos-puntos"]}>
+                        {paso.data.hitos.map((hito) => (
+                          <li>
+                            {hito.cuando && <span class="paso-hito-cuando" data-en={hito.cuandoEn}>{hito.cuando}</span>}
+                            <span data-en={hito.rolEn}>{hito.rol}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    )
+                  }
+                  {
+                    paso.data.bajada && paso.data.slug !== "tiendamia" && paso.data.slug !== "ibm" && (
+                      <p class="paso-bajada" data-en={paso.data.bajadaEn}>{paso.data.bajada}</p>
+                    )
+                  }
+                  {
+                    paso.data.nota && (
+                      <p class="paso-nota" data-en={paso.data.notaEn}>{paso.data.nota}</p>
+                    )
+                  }
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+  <div class="camino-cierre">
+    <a href="/contacto" data-en={`${pasos.length + 1} — Let's name it. Write to me.`}>{pasos.length + 1} — Pongámosle nombre. Escribime. <span aria-hidden="true">↗</span></a>
+  </div>
+  <Voces />
+  <Diamante />
+  <script>
+    import "../scripts/viaje";
+  </script>
+  <Fragment set:html={`<style>${cssDelCamino(pasos.map((paso) => paso.data.slug))}</style>`} />
+</Base>

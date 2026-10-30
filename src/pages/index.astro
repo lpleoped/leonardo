@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import EstudioFlotante from "../components/EstudioFlotante.astro";
+import Galardones from "../components/Galardones.astro";
+import { sitio } from "../site";
+
+const [nombre, apellido] = sitio.nombre.split(" ");
+---
+
+<Base titulo={sitio.nombre} descripcion={sitio.frase}>
+  <div class="estudio">
+  <EstudioFlotante />
+  <div class="presentacion">
+    <h1 class="home-nombre">
+      {nombre}<br /><span>{apellido}<span class="nombre-punto">.</span></span>
+    </h1>
+    {
+      sitio.rol && (
+        <div class="presentacion-pie">
+          <p class="rol" data-en={sitio.rolEn}>{sitio.rol}</p>
+        </div>
+      )
+    }
+    <a class="salto-viaje" href="/acerca" data-en="My story.">
+      <span aria-hidden="true">↓</span>
+      Mi historia.
+    </a>
+  </div>
+  </div>
+  <Galardones />
+  <p class="home-acerca">
+    <a href="/acerca" data-en="If you want to know a bit of my story">Si querés conocer un poco de mi historia<span aria-hidden="true">↗</span></a>
+  </p>
+</Base>

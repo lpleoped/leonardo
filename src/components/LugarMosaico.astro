@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+import { mosaicos } from "../lib/lugar-mosaico";
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const mosaico = mosaicos[slug];
+if (!mosaico) {
+  return;
+}
+
+const anchos =
+  mosaico.layout === "uno" || mosaico.layout === "documento"
+    ? [480, 720, 960, 1280, 1600]
+    : mosaico.layout === "tiendamia" || mosaico.layout === "tres"
+      ? [320, 480, 720, 960, 1280]
+      : [320, 480, 720, 960];
+const sizes =
+  mosaico.layout === "uno" || mosaico.layout === "documento"
+    ? "(max-width: 40rem) calc(100vw - 2.5rem), (max-width: 64rem) calc(100vw - 6rem), min(52rem, 72vw)"
+    : mosaico.layout === "tiendamia" || mosaico.layout === "tres"
+      ? "(max-width: 40rem) calc(100vw - 2.5rem), (max-width: 64rem) calc((100vw - 6rem) * .62), min(34rem, 48vw)"
+      : "(max-width: 40rem) calc(100vw - 2.5rem), (max-width: 64rem) calc((100vw - 6rem) / 2), min(26rem, 34vw)";
+---
+
+<figure class="lugar-mosaico" data-layout={mosaico.layout}>
+  <div class="mosaico-cabecera">
+    <span data-en="Photo essay">Ensayo visual</span>
+    <span aria-hidden="true">01—{String(mosaico.celdas.length).padStart(2, "0")}</span>
+  </div>
+  <ul class="lugar-mosaico-rejilla">
+    {
+      mosaico.celdas.map((celda, indice) => (
+        <li
+          class={`lugar-mosaico-celda lugar-mosaico-celda--${celda.celda}`}
+          style={`--pos: ${celda.posicion ?? "center"}; --fit: ${celda.fit ?? "cover"}; --ratio: ${celda.ratio ?? `${celda.imagen.width} / ${celda.imagen.height}`}`}
+        >
+          <Image
+            src={celda.imagen}
+            width={celda.imagen.width}
+            height={celda.imagen.height}
+            alt={celda.alt}
+            data-en-alt={celda.altEn}
+            widths={anchos}
+            sizes={sizes}
+            format="webp"
+            quality={78}
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="mosaico-indice" aria-hidden="true">{String(indice + 1).padStart(2, "0")}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <figcaption class="lugar-mosaico-pie" data-en={mosaico.pieEn}>{mosaico.pie}</figcaption>
+</figure>

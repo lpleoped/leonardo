@@ -1,0 +1,50 @@
+---
+import { Image } from "astro:assets";
+import { mosaicosFaceta } from "../lib/faceta-mosaico";
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const mosaico = mosaicosFaceta[slug];
+
+const anchos = [320, 480, 640, 960, 1280, 1600];
+const sizes =
+  "(max-width: 40rem) calc((100vw - 3.25rem) / 2), (max-width: 64rem) calc((100vw - 7rem) / 2), min(34rem, 48vw)";
+---
+
+{
+  mosaico && (
+    <figure class="faceta-mosaico" data-layout={slug}>
+      <div class="mosaico-cabecera">
+        <span data-en="Photo essay">Ensayo visual</span>
+        <span aria-hidden="true">01—{String(mosaico.celdas.length).padStart(2, "0")}</span>
+      </div>
+      <ul class="faceta-mosaico-rejilla">
+        {mosaico.celdas.map((celda, indice) => (
+          <li
+            class={`faceta-mosaico-celda faceta-mosaico-celda--${celda.celda}`}
+            style={`--pos: ${celda.posicion ?? "center"}; --fit: ${celda.fit ?? "cover"}; --ratio: ${celda.ratio ?? `${celda.imagen.width} / ${celda.imagen.height}`}`}
+          >
+            <Image
+              src={celda.imagen}
+              width={celda.imagen.width}
+              height={celda.imagen.height}
+              alt={celda.alt}
+              data-en-alt={celda.altEn}
+              widths={anchos}
+              sizes={sizes}
+              format="webp"
+              quality={84}
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="mosaico-indice" aria-hidden="true">{String(indice + 1).padStart(2, "0")}</span>
+          </li>
+        ))}
+      </ul>
+      <figcaption class="lugar-mosaico-pie" data-en={mosaico.pieEn}>{mosaico.pie}</figcaption>
+    </figure>
+  )
+}

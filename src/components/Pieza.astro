@@ -1,0 +1,63 @@
+---
+import type { ImageMetadata } from "astro";
+import { getImage, Image } from "astro:assets";
+
+interface Medio {
+  alt: string;
+  ancho: number;
+  alto: number;
+  imagen?: ImageMetadata;
+  video?: string;
+  poster?: ImageMetadata;
+}
+
+interface Props {
+  medio: Medio;
+  principal?: boolean;
+}
+
+const { medio, principal = false } = Astro.props;
+const clase = principal ? "pieza" : undefined;
+const anchos = [480, 800, 1100, 1400];
+const sizes = "(max-width: 40rem) calc(100vw - 2.5rem), min(78rem, calc(100vw - 6rem))";
+const poster =
+  medio.video && medio.poster
+    ? await getImage({ src: medio.poster, width: Math.min(medio.poster.width, 1400), format: "webp", quality: 82 })
+    : undefined;
+---
+
+{
+  medio.video && poster ? (
+    <div class={clase}>
+      <video
+        controls
+        playsinline
+        preload="none"
+        poster={poster.src}
+        width={medio.ancho}
+        height={medio.alto}
+        data-caso-video
+      >
+        <source src={medio.video} type="video/mp4" />
+      </video>
+    </div>
+  ) : (
+    medio.imagen && (
+      <div class={clase}>
+        <Image
+          src={medio.imagen}
+          width={medio.ancho}
+          height={medio.alto}
+          alt={medio.alt}
+          widths={anchos}
+          sizes={sizes}
+          format="webp"
+          quality={82}
+          loading={principal ? "eager" : "lazy"}
+          fetchpriority={principal ? "high" : undefined}
+          decoding="async"
+        />
+      </div>
+    )
+  )
+}

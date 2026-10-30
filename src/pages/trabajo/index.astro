@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+import CasoFila from "../../components/CasoFila.astro";
+import { sitio } from "../../site";
+import { casosPublicados, etiquetaOficio } from "../../lib/casos";
+
+const casos = await casosPublicados();
+const vistos = new Set<string>();
+const secciones = ["campaña", "motion", "ilustración", "diseño editorial", "diseño"]
+  .map((oficio) => {
+    const items = casos.filter(
+      (caso) => caso.data.disciplinas[0] === oficio && !vistos.has(caso.id),
+    );
+    for (const item of items) vistos.add(item.id);
+    return { titulo: etiquetaOficio(oficio), en: etiquetaOficio(oficio, "en"), items };
+  })
+  .filter((seccion) => seccion.items.length > 0);
+const resto = casos.filter((caso) => !vistos.has(caso.id));
+if (resto.length > 0) secciones.push({ titulo: "Trabajo", en: "Work", items: resto });
+---
+
+<Base titulo={`Trabajo — ${sitio.nombre}`} tituloEn={`Work — ${sitio.nombre}`} descripcion={sitio.frase}>
+  <div class="pagina-intro"><p class="eyebrow" data-en="Selected work">Trabajo seleccionado</p><h1 class="pagina-titulo" data-en="Work">Trabajo<span class="titulo-punto">.</span></h1><p class="pagina-bajada" data-en="The pieces go here.">Las piezas van acá.</p></div>
+  {
+    casos.length === 0 ? (
+      <p class="vacio" data-en="The selection goes here.">La selección va acá.</p>
+    ) : (
+      secciones.map((seccion) => (
+        <section class="grupo">
+          <h2 data-en={seccion.en}>{seccion.titulo}</h2>
+          <div class="rollo">
+            <div class="marco">
+              <ol class="lista">
+                {seccion.items.map((caso) => (
+                  <li>
+                    <CasoFila caso={caso} />
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+      ))
+    )
+  }
+</Base>
