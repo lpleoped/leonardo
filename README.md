@@ -68,7 +68,7 @@ Las tipografías Anybody y Newsreader se distribuyen bajo la SIL Open Font Licen
 
 Las marcas, logos, nombres comerciales e imágenes de terceros pertenecen a sus respectivos titulares. Leonardo no reclama esos derechos; se muestran en contexto biográfico y de portfolio personal en este sitio. Detalle en [LICENSE](LICENSE).
 
-La carpeta `privados/` es trabajo personal (notas que no van al sitio). Ver [privados/README.md](privados/README.md).
+La carpeta `privados/` es trabajo personal local (notas y pendientes que no van al sitio ni al remoto).
 
 ## Licencia
 

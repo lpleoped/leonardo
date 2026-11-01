@@ -1,8 +1,8 @@
 docs/
 .cursor/
 
-# Accionables de derechos/assets (solo Leonardo; ver privados/README.md)
-privados/accionables-derechos.txt
+# Trabajo personal (notas, accionables de derechos/assets). No va al remoto.
+privados/
 
 node_modules/
 dist/

@@ -175,6 +175,7 @@ main:has(.camino) { padding-top: 3rem; }
   font-size: clamp(1.05rem, 1.6vw, 1.2rem);
   line-height: 1.55;
   text-wrap: pretty;
+  white-space: pre-line;
 }
 .siguiente { display: grid; gap: .75rem; justify-items: start; text-decoration: none; padding: 2rem 0; border-top: 1px solid var(--filete); }
 .siguiente .siguiente-titulo { font: 560 clamp(1.8rem, 4vw, 3rem)/1.1 var(--display); font-stretch: 125%; letter-spacing: -.04em; }
