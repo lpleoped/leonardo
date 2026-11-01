@@ -10,6 +10,7 @@
   "packageManager": "pnpm@10.15.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:oauth": "vercel dev",
     "build": "astro build",
     "preview": "astro preview"
   },

@@ -9,90 +9,29 @@ const facetas = await facetasPublicadas();
 <section class="detras diamante" id="detras" aria-labelledby="detras-titulo">
   <p class="detras-indice" data-en="Archive">Archivo</p>
   <h2 class="detras-titulo" id="detras-titulo" tabindex="-1" data-en="Other pieces.">Otras piezas.</h2>
-  <div class="diamante-escena" style={`--caras: ${facetas.length}`}>
+  <nav class="diamante-puntos" aria-label="Caras del archivo" data-en-aria-label="Archive faces">
     {
-      facetas.map((faceta, indice) => (
-        <input
-          class="diamante-radio"
-          type="radio"
-          name="faceta"
-          id={`faceta-${faceta.data.slug}`}
-          checked={indice === 0}
-        />
-      ))
-    }
-    <div class="diamante-escenario">
-      <div class="diamante-solido">
-        {
-          facetas.map((faceta) => {
-            const encuadre = encuadreCara[faceta.data.slug];
-            return (
-              <div class={`diamante-cara diamante-cara-${faceta.data.slug}`}>
-                <Image
-                  src={faceta.data.cara}
-                  width={faceta.data.cara.width}
-                  height={faceta.data.cara.height}
-                  alt={faceta.data.caraAlt}
-                  data-en-alt={faceta.data.caraAltEn}
-                  widths={[640, 960, 1280, 1600, 1920]}
-                  sizes="(max-width: 40rem) calc(100vw - 2.5rem), min(68rem, 90vw)"
-                  format="webp"
-                  quality={84}
-                  style={`object-fit: ${encuadre?.fit ?? "cover"}; object-position: ${encuadre?.posicion ?? "center"}`}
-                />
-              </div>
-            );
-          })
-        }
-      </div>
-      <div class="diamante-abrir">
-        {
-          facetas.map((faceta) => (
-            <a
-              class="diamante-abrir-cara"
-              href={`/archivo/${faceta.data.slug}`}
-              aria-label={faceta.data.titulo}
-              data-en-aria-label={faceta.data.tituloEn}
-            >
-              <span class="diamante-punto-nombre" data-en={faceta.data.tituloEn}>{faceta.data.titulo}</span>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-    <p class="diamante-leyenda">
-      {
-        facetas.map((faceta) => (
-          <a class="diamante-nombre" href={`/archivo/${faceta.data.slug}`} data-en={faceta.data.tituloEn}>
-            {faceta.data.titulo}
+      facetas.map((faceta) => {
+        const encuadre = encuadreCara[faceta.data.slug];
+        return (
+          <a class="diamante-punto" href={`/archivo/${faceta.data.slug}`}>
+            <span class="diamante-punto-foto" aria-hidden="true">
+              <Image
+                src={faceta.data.cara}
+                width={faceta.data.cara.width}
+                height={faceta.data.cara.height}
+                alt=""
+                widths={[240, 360, 520]}
+                sizes="(max-width: 40rem) calc((100vw - 3.2rem) / 2), 11.5rem"
+                format="webp"
+                quality={78}
+                style={`object-fit: ${encuadre?.fit ?? "cover"}; object-position: ${encuadre?.posicion ?? "center"}`}
+              />
+            </span>
+            <span class="diamante-punto-titulo" data-en={faceta.data.tituloEn}>{faceta.data.titulo}</span>
           </a>
-        ))
-      }
-    </p>
-    <div class="diamante-puntos" role="group" aria-label="Caras del archivo" data-en-aria-label="Archive faces">
-      {
-        facetas.map((faceta) => {
-          const encuadre = encuadreCara[faceta.data.slug];
-          return (
-            <label class="diamante-punto" for={`faceta-${faceta.data.slug}`}>
-              <span class="diamante-punto-foto" aria-hidden="true">
-                <Image
-                  src={faceta.data.cara}
-                  width={faceta.data.cara.width}
-                  height={faceta.data.cara.height}
-                  alt=""
-                  widths={[240, 360, 520]}
-                  sizes="(max-width: 40rem) calc((100vw - 3.2rem) / 2), 11.5rem"
-                  format="webp"
-                  quality={78}
-                  style={`object-fit: ${encuadre?.fit ?? "cover"}; object-position: ${encuadre?.posicion ?? "center"}`}
-                />
-              </span>
-              <span class="diamante-punto-titulo" data-en={faceta.data.tituloEn}>{faceta.data.titulo}</span>
-            </label>
-          );
-        })
-      }
-    </div>
-  </div>
+        );
+      })
+    }
+  </nav>
 </section>

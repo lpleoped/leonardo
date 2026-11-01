@@ -2,12 +2,18 @@ import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
-// Hasta definir el dominio, el canónico y el sitemap usan SITE o localhost.
-// Los hostings marcan sus builds con CI: publicar con localhost dejaría el canónico roto.
-if (process.env.CI && !process.env.SITE) {
-  throw new Error("Falta SITE: definila con el dominio público antes de publicar.");
+// Canónico y sitemap: SITE manda. En Vercel, sin SITE, usamos el dominio del proyecto.
+// Los hostings marcan CI: publicar con localhost dejaría el canónico roto.
+const vercelHost =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+const site =
+  process.env.SITE ??
+  (vercelHost ? `https://${vercelHost}` : "http://localhost:4321");
+if (process.env.CI && !process.env.SITE && !vercelHost) {
+  throw new Error(
+    "Falta SITE (o un host de Vercel): definila con el dominio público antes de publicar.",
+  );
 }
-const site = process.env.SITE ?? "http://localhost:4321";
 
 export default defineConfig({
   site,

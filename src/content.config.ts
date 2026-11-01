@@ -91,8 +91,8 @@ const lugares = defineCollection({
     cuandoEn: z.string().min(1),
     lugar: z.string().min(1),
     lugarEn: z.string().min(1),
-    detalle: z.string().min(1),
-    detalleEn: z.string().min(1),
+    detalle: z.string().min(1).optional(),
+    detalleEn: z.string().min(1).optional(),
     bajada: z.string().min(1).optional(),
     bajadaEn: z.string().min(1).optional(),
     nota: z.string().min(1).optional(),
@@ -120,7 +120,7 @@ const lugares = defineCollection({
           textoEn: z.string().min(1),
         }),
       )
-      .min(1),
+      .default([]),
   })
   .refine(
     (lugar) =>

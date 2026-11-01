@@ -1,0 +1,15 @@
+---
+import Base from "../layouts/Base.astro";
+import { sitio } from "../site";
+---
+
+<Base
+  titulo={`Proyectos — ${sitio.nombre}`}
+  tituloEn={`Projects — ${sitio.nombre}`}
+  descripcion="Proyectos en camino."
+>
+  <div class="pagina-intro">
+    <h1 class="pagina-titulo" data-en="Projects">Proyectos<span class="titulo-punto">.</span></h1>
+    <p class="pagina-bajada" data-en="On the way…">En camino…</p>
+  </div>
+</Base>

@@ -27,8 +27,12 @@ personas:
     enlaceEtiqueta: Ver LinkedIn
     enlaceEtiquetaEn: View LinkedIn
   - nombre: Gabriela Pedreira
-    nota: Mi hermana.
-    notaEn: My sister.
+    nota: |-
+      Mi hermana.
+      Directora de Arte.
+    notaEn: |-
+      My sister.
+      Art Director.
     enlace: https://www.behance.net/gabrielapedreira
     enlaceEtiqueta: Ver Behance
     enlaceEtiquetaEn: View Behance
@@ -41,10 +45,17 @@ personas:
     notaEn: |-
       My maternal grandmother.
       The best cook on earth.
+  - nombre: Lorenzo Pedreira
+    nota: |-
+      Mi Hijo.
+      Quien me inspira a ser mejor todos los días.
+    notaEn: |-
+      My son.
+      Who inspires me to be better every day.
 escenas:
   - id: los-mios
     titulo: Los míos
     tituloEn: My people
-    texto: César, Lidia, Gabriela y Nené.
-    textoEn: César, Lidia, Gabriela and Nené.
+    texto: César|Lidia|Gaba|Nené|Lolo
+    textoEn: César|Lidia|Gaba|Nené|Lolo
 ---

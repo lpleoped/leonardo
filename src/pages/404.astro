@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+import { flecha } from "../lib/flechas";
+import { sitio } from "../site";
+
+const salidas = [
+  { href: "/", nota: "Volver", notaEn: "Back", nombre: "Inicio", nombreEn: "Home" },
+  { href: "/trabajo", nota: "Piezas", notaEn: "Pieces", nombre: "Trabajo", nombreEn: "Work" },
+  { href: "/acerca", nota: "Camino", notaEn: "Path", nombre: "Mi historia", nombreEn: "My story" },
+  { href: "/contacto", nota: "Charla", notaEn: "Chat", nombre: "Contacto", nombreEn: "Contact" },
+];
+---
+
+<Base
+  titulo={`Página no encontrada — ${sitio.nombre}`}
+  tituloEn={`Page not found — ${sitio.nombre}`}
+  descripcion="Esta página no está. La dirección no abre ninguna pieza."
+  indexar={false}
+>
+  <div class="perdida">
+    <div class="perdida-intro">
+      <p class="eyebrow">404</p>
+      <h1 class="pagina-titulo">
+        <span data-en="This page">Esta página</span><br />
+        <em data-en="isn't here.">no está.</em>
+      </h1>
+      <p class="pagina-bajada" data-en="That address doesn't open any piece here. Pick where to go next.">
+        La dirección no abre ninguna pieza de acá. Elegí por dónde seguir.
+      </p>
+    </div>
+    <nav class="perdida-salidas" aria-label="Salidas" data-en-aria-label="Ways out">
+      {
+        salidas.map((salida) => (
+          <a href={salida.href}>
+            <span data-en={salida.notaEn}>{salida.nota}</span>
+            <span data-en={salida.nombreEn}>{salida.nombre}</span>
+            <span aria-hidden="true">{flecha.ne}</span>
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</Base>

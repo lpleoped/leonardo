@@ -1,56 +1,136 @@
 ---
 import { Image } from "astro:assets";
+import { flecha } from "../lib/flechas";
 import { recomendaciones, recomendacionesUrl } from "../lib/recomendaciones";
 ---
 
 <section class="voces" id="voces" aria-labelledby="voces-titulo">
-  <div class="voces-cabecera">
-    <p class="voces-indice" data-en="LinkedIn">LinkedIn</p>
-    <h2 class="voces-titulo" id="voces-titulo" tabindex="-1" data-en="What they say.">Lo que dicen.</h2>
-    <p class="voces-nota" data-en="Recommendations written on LinkedIn. Each name opens the profile.">
-      Recomendaciones escritas en LinkedIn. Cada nombre abre el perfil.
+  <div class="voces-arriba">
+    <div class="voces-cabecera">
+      <p class="voces-indice" data-en="LinkedIn">LinkedIn</p>
+      <h2 class="voces-titulo" id="voces-titulo" tabindex="-1" data-en="Their voices.">Sus voces.</h2>
+      <div class="voces-relato">
+        <p
+          class="voces-parrafo"
+          data-en="There will always be someone ready to tell you how you should do things — even people who never dared to try."
+        >
+          Siempre va a haber alguien dispuesto a decirte cómo deberías hacer las cosas, incluso quienes nunca se animaron a&nbsp;intentarlo.
+        </p>
+        <p
+          class="voces-parrafo"
+          data-en="But doing is another story. It's getting up every day with a purpose, taking risks, getting it wrong, learning, and trying again. It's daring to be different when it would be easier to stay the same."
+        >
+          Pero hacer es otra historia. Es levantarse cada día con un propósito, arriesgarse, equivocarse, aprender y volver a intentarlo. Es animarse a ser diferente cuando sería más fácil quedarse&nbsp;igual.
+        </p>
+        <p
+          class="voces-parrafo"
+          data-en="I choose to stand with the ones who do. I don't need to convince anyone of who I am — I'd rather let my work speak for itself… And the people who walked that path with me know it."
+        >
+          Yo elijo estar del lado de los que hacen. No necesito convencer a nadie de quién soy, prefiero que mi trabajo hable por sí solo… Y quienes compartieron ese camino conmigo, lo&nbsp;saben.
+        </p>
+      </div>
+    </div>
+    <p
+      class="voces-nota"
+      data-en="These are some of their words — you can also find them on LinkedIn."
+    >
+      Estas son algunas de sus palabras, que también podés encontrar en&nbsp;LinkedIn.
     </p>
   </div>
-  <div class="voces-carrusel" tabindex="0" aria-label="Carrusel de recomendaciones" data-en-aria-label="Recommendations carousel">
-    <ul class="voces-pista">
-      {
-        recomendaciones.map((voz) => (
-          <li class="voz">
-            <article class="voz-captura">
-              <header class="voz-cabeza">
-                <Image
-                  class="voz-foto"
-                  src={voz.foto}
-                  alt=""
-                  width={80}
-                  height={80}
-                  densities={[1, 2]}
-                  format="webp"
-                  quality={82}
-                />
-                <div class="voz-meta">
-                  <p class="voz-nombre">
-                    <a href={voz.perfil} target="_blank" rel="noopener noreferrer">{voz.nombre}</a>
-                  </p>
-                  <p class="voz-rol">{voz.rol}</p>
-                  <p class="voz-relacion">
-                    <span>{voz.fecha}, </span>
-                    <span data-en={voz.relacionEn}>{voz.relacion}</span>
-                  </p>
+
+  <div class="voces-reel">
+    <div class="voces-controles">
+      <button
+        class="voces-flecha voces-flecha-prev"
+        type="button"
+        data-voces-prev
+        aria-label="Recomendación anterior"
+        data-en-aria-label="Previous recommendation"
+      >
+        <span aria-hidden="true">{flecha.izq}</span>
+      </button>
+      <button
+        class="voces-flecha voces-flecha-next"
+        type="button"
+        data-voces-next
+        aria-label="Recomendación siguiente"
+        data-en-aria-label="Next recommendation"
+      >
+        <span aria-hidden="true">{flecha.der}</span>
+      </button>
+    </div>
+    <div
+      class="voces-carrusel"
+      data-voces-carrusel
+      tabindex="0"
+      aria-label="Carrusel de recomendaciones"
+      data-en-aria-label="Recommendations carousel"
+    >
+      <ul class="voces-pista">
+        {
+          recomendaciones.map((voz) => (
+            <li class="voz" id={`voz-${voz.slug}`}>
+              <article class="voz-captura">
+                <p class="voz-marca" aria-hidden="true">“</p>
+                <header class="voz-cabeza">
+                  <span
+                    class="voz-foto-marco"
+                    style={`--pos: ${voz.foco ?? "center"}; --zoom: ${voz.zoom ?? 1}`}
+                  >
+                    <Image
+                      class="voz-foto"
+                      src={voz.foto}
+                      alt=""
+                      width={120}
+                      height={120}
+                      densities={[1, 2]}
+                      format="webp"
+                      quality={84}
+                    />
+                  </span>
+                  <div class="voz-meta">
+                    <p class="voz-nombre">
+                      <a href={voz.perfil} target="_blank" rel="noopener noreferrer">{voz.nombre}</a>
+                    </p>
+                    <p class="voz-rol">{voz.rol}</p>
+                    <p class="voz-relacion">
+                      <span>{voz.fecha}, </span>
+                      <span data-en={voz.relacionEn}>{voz.relacion}</span>
+                    </p>
+                  </div>
+                </header>
+                <div class="voz-lectura">
+                  <div
+                    class="voz-cuerpo"
+                    data-voz-cuerpo
+                    tabindex="0"
+                    aria-label={`Recomendación de ${voz.nombre}`}
+                    data-en-aria-label={`Recommendation from ${voz.nombre}`}
+                  >
+                    {voz.texto.split("\n\n").map((parrafo) => (
+                      <p>{parrafo}</p>
+                    ))}
+                  </div>
+                  <p class="voz-continuar" aria-hidden="true" data-en={`More below ${flecha.abajo}`}>Más abajo {flecha.abajo}</p>
                 </div>
-              </header>
-              <div class="voz-cuerpo">
-                {voz.texto.split("\n\n").map((parrafo) => (
-                  <p>{parrafo}</p>
-                ))}
-              </div>
-              <a class="voz-verificar" href={recomendacionesUrl} target="_blank" rel="noopener noreferrer" data-en="Verify on LinkedIn ↗">
-                Verificar en LinkedIn <span aria-hidden="true">↗</span>
-              </a>
-            </article>
-          </li>
-        ))
-      }
-    </ul>
+                <a
+                  class="voz-verificar"
+                  href={recomendacionesUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-en={`Verify on LinkedIn ${flecha.ne}`}
+                >
+                  Verificar en LinkedIn <span aria-hidden="true">{flecha.ne}</span>
+                </a>
+              </article>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
+
+<script>
+  import "../scripts/voces";
+</script>

@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import EstudioFlotante from "../components/EstudioFlotante.astro";
 import Galardones from "../components/Galardones.astro";
+import { flecha } from "../lib/flechas";
 import { sitio } from "../site";
 
 const [nombre, apellido] = sitio.nombre.split(" ");
@@ -21,14 +22,18 @@ const [nombre, apellido] = sitio.nombre.split(" ");
         </div>
       )
     }
+    <p class="home-lema">
+      <span class="home-lema-antes" data-en={sitio.fraseAntesEn}>{sitio.fraseAntes}</span>
+      <span class="home-lema-golpe" data-en={sitio.fraseGolpeEn}>{sitio.fraseGolpe}</span>
+    </p>
     <a class="salto-viaje" href="/acerca" data-en="My story.">
-      <span aria-hidden="true">↓</span>
+      <span aria-hidden="true">{flecha.abajo}</span>
       Mi historia.
     </a>
   </div>
   </div>
   <Galardones />
   <p class="home-acerca">
-    <a href="/acerca" data-en="If you want to know a bit of my story">Si querés conocer un poco de mi historia<span aria-hidden="true">↗</span></a>
+    <a href="/acerca" data-en="If you want to know a bit of my story">Si querés conocer un poco de mi historia<span aria-hidden="true">{flecha.ne}</span></a>
   </p>
 </Base>

@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LugarMosaico from "../../components/LugarMosaico.astro";
+import { flecha } from "../../lib/flechas";
 import { lugaresPublicados } from "../../lib/lugares";
 import { mosaicos } from "../../lib/lugar-mosaico";
 
@@ -36,14 +37,14 @@ function numero(posicion: number) {
 <Base
   titulo={`${lugar.data.lugar} — Mi historia`}
   tituloEn={`${lugar.data.lugarEn} — My story`}
-  descripcion={lugar.data.detalle}
+  descripcion={lugar.data.detalle ?? lugar.data.bajada ?? lugar.data.lugar}
 >
   <article class="lugar">
     <header class="lugar-cabecera">
-      <a class="lugar-volver" href="/acerca#recorrido" data-en="The path"><span aria-hidden="true">←</span>El recorrido</a>
+      <a class="lugar-volver" href="/acerca#recorrido" data-en="The path"><span aria-hidden="true">{flecha.izq}</span>El recorrido</a>
       <p class="paso-cuando lugar-epoca" data-en={lugar.data.cuandoEn}><span class="paso-numero">{numero(indice)}</span>{lugar.data.cuando}</p>
       <h1 class="lugar-titulo" data-en={lugar.data.lugarEn}>{lugar.data.lugar}</h1>
-      <p class="lugar-detalle" data-en={lugar.data.detalleEn}>{lugar.data.detalle}</p>
+      {lugar.data.detalle && <p class="lugar-detalle" data-en={lugar.data.detalleEn}>{lugar.data.detalle}</p>}
       {
         lugar.data.hitos.length > 0 && (
           <ul class:list={["lugar-hitos", !lugar.data.hitos.some((hito) => hito.cuando) && "paso-hitos-puntos"]}>
@@ -68,23 +69,46 @@ function numero(posicion: number) {
               target="_blank"
               data-en={lugar.data.enlaceEtiquetaEn}
             >
-              {lugar.data.enlaceEtiqueta}<span aria-hidden="true"> ↗</span>
+              {lugar.data.enlaceEtiqueta}<span aria-hidden="true"> {flecha.ne}</span>
             </a>
           </p>
         )
       }
     </header>
     {tieneMosaico && <LugarMosaico slug={lugar.data.slug} />}
-    <ol class="lugar-escenas">
-      {
-        lugar.data.escenas.map((escena) => (
-          <li id={escena.id}>
-            <h2 data-en={escena.tituloEn}>{escena.titulo}</h2>
-            <p data-en={escena.textoEn}>{escena.texto}</p>
-          </li>
-        ))
-      }
-    </ol>
+    {
+      lugar.data.slug === "ibm-hoy" && (
+        <section class="lugar-video" aria-labelledby="ibm-video-titulo">
+          <h2 id="ibm-video-titulo" data-en="Presenting a tool of my own">Presentación de herramienta propia</h2>
+          <video controls preload="none" playsinline>
+            <source src="/video/ibm-hoy-presentacion.mp4" type="video/mp4" />
+            Tu navegador no puede reproducir este video.
+          </video>
+          <p
+            class="lugar-video-nota"
+            data-en="A tool made for teams, that puts people at the center. It grew from a specific need, in my own time; then I shared it. Of the rest… I leave this clip so you can see this side of me too."
+          >
+            Una herramienta hecha para equipos, que pone a las personas en el centro.
+            Nació de una necesidad puntual, en mi tiempo personal; después la compartí.
+            Del resto… Dejo este recorte para que vean también esta parte de mí.
+          </p>
+        </section>
+      )
+    }
+    {
+      lugar.data.escenas.length > 0 && (
+        <ol class="lugar-escenas">
+          {
+            lugar.data.escenas.map((escena) => (
+              <li id={escena.id}>
+                <h2 data-en={escena.tituloEn}>{escena.titulo}</h2>
+                <p data-en={escena.textoEn}>{escena.texto}</p>
+              </li>
+            ))
+          }
+        </ol>
+      )
+    }
     {
       (anterior || siguiente) && (
         <nav class="lugar-vecinos" aria-label="Otros lugares" data-en-aria-label="Other places">

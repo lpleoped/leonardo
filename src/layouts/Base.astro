@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { flecha } from "../lib/flechas";
 import { sitio } from "../site";
 
 interface Props {
@@ -8,26 +9,31 @@ interface Props {
   descripcion: string;
   imagen?: string;
   prefetch?: string;
+  indexar?: boolean;
 }
 
-const { titulo, tituloEn, descripcion, imagen, prefetch } = Astro.props;
+const { titulo, tituloEn, descripcion, imagen, prefetch, indexar = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imagenAbsoluta = imagen ? new URL(imagen, Astro.site).href : undefined;
 const path = Astro.url.pathname;
 const secciones = [
   { href: "/acerca", label: "Mi historia", en: "My story" },
+  { href: "/proyectos", label: "Mis proyectos", en: "My projects" },
+  { href: "/acerca#detras", label: "Otras piezas", en: "Other pieces" },
   { href: "/contacto", label: "Contacto", en: "Contact" },
 ];
 const redes = [
-  sitio.instagram ? { href: sitio.instagram, label: "Instagram" } : undefined,
   sitio.behance ? { href: sitio.behance, label: "Behance" } : undefined,
   sitio.linkedin ? { href: sitio.linkedin, label: "LinkedIn" } : undefined,
   sitio.github ? { href: sitio.github, label: "GitHub" } : undefined,
+  sitio.instagram ? { href: sitio.instagram, label: "Instagram" } : undefined,
 ].filter((red) => red !== undefined);
 
 function vigente(href: string) {
+  if (href.includes("#")) return false;
   if (href === "/trabajo") return path === "/trabajo" || path.startsWith("/trabajo/");
-  if (href === "/acerca") return path === "/acerca" || path.startsWith("/acerca/") || path.startsWith("/archivo/");
+  if (href === "/proyectos") return path === "/proyectos";
+  if (href === "/acerca") return path === "/acerca" || path.startsWith("/acerca/");
   return path === href;
 }
 ---
@@ -39,6 +45,7 @@ function vigente(href: string) {
     <meta name="theme-color" content="#14110f" />
     <title data-en={tituloEn}>{titulo}</title>
     <meta name="description" content={descripcion} />
+    {!indexar && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical.href} />
     <meta property="og:locale" content="es_UY" />
     <meta property="og:type" content="website" />
@@ -89,17 +96,23 @@ function vigente(href: string) {
       <slot />
     </main>
     <footer class="site-footer">
-      <a class="footer-firma" href="/">{sitio.nombre}<span aria-hidden="true">↗</span></a>
+      <a class="footer-firma" href="/">{sitio.nombre}<span aria-hidden="true">{flecha.ne}</span></a>
       <span data-en={sitio.lugarEn}>{sitio.lugar}</span>
       <div class="footer-cierre">
         <div class="footer-redes">
           {
             redes.map((red) => (
-              <a href={red.href}>{red.label} ↗</a>
+              <a href={red.href}>{red.label} {flecha.ne}</a>
             ))
           }
         </div>
       </div>
+      <p
+        class="footer-atribucion"
+        data-en="Third-party trademarks, logos and images belong to their owners. Shown here in a biographical context on this personal site."
+      >
+        Marcas, logos e imágenes de terceros pertenecen a sus titulares. Se muestran en contexto biográfico en este sitio personal.
+      </p>
     </footer>
     <script is:inline>
       (() => {

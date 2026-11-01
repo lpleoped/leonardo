@@ -6,7 +6,6 @@ interface Props {
 }
 
 const { escena } = Astro.props;
-const recorte = escena?.recorte;
 ---
 
 {
@@ -20,17 +19,6 @@ const recorte = escena?.recorte;
         height={escena.fachada.height}
         decoding="async"
       />
-      {escena.logo && escena.logoEstilo && (recorte ? (
-        <span class="paso-logo paso-logo-recorte" style={escena.logoEstilo}>
-          <img
-            src={escena.logo.src}
-            alt=""
-            style={`width:${(recorte.lienzoAncho / recorte.ancho) * 100}%;left:${(-recorte.x / recorte.ancho) * 100}%;top:${(-recorte.y / recorte.alto) * 100}%`}
-          />
-        </span>
-      ) : (
-        <img class="paso-logo" src={escena.logo.src} alt="" style={escena.logoEstilo} />
-      ))}
     </div>
   )
 }

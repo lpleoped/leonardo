@@ -1,11 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
+import { flecha } from "../lib/flechas";
 import { sitio } from "../site";
 
 const canales = [
-  sitio.instagram
-    ? { href: sitio.instagram, nota: "Red", notaEn: "Social", nombre: "Instagram", clase: undefined }
-    : undefined,
   sitio.behance
     ? { href: sitio.behance, nota: "Archivo", notaEn: "Archive", nombre: "Behance", clase: undefined }
     : undefined,
@@ -15,8 +13,8 @@ const canales = [
   sitio.github
     ? { href: sitio.github, nota: "Código", notaEn: "Code", nombre: "GitHub", clase: undefined }
     : undefined,
-  sitio.email
-    ? { href: `mailto:${sitio.email}`, nota: "Correo", notaEn: "Email", nombre: sitio.email, clase: "contacto-mail" }
+  sitio.instagram
+    ? { href: sitio.instagram, nota: "Red", notaEn: "Social", nombre: "Instagram", clase: undefined }
     : undefined,
 ].filter((canal) => canal !== undefined);
 ---
@@ -31,9 +29,17 @@ const canales = [
         <a class={canal.clase} href={canal.href}>
           <span data-en={canal.notaEn}>{canal.nota}</span>
           {canal.nombre}
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">{flecha.ne}</span>
         </a>
       ))
     }
   </div>
+  {
+    sitio.email && (
+      <p class="contacto-personal">
+        <span data-en="Or write me here: ">Si no, podés escribirme por acá: </span>
+        <a href={`mailto:${sitio.email}`}>{sitio.email}</a>
+      </p>
+    )
+  }
 </Base>

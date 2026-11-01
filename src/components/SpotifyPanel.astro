@@ -1,0 +1,39 @@
+---
+import SpotifyEmbed from "./SpotifyEmbed.astro";
+
+interface Props {
+  compacto?: boolean;
+}
+
+const { compacto = false } = Astro.props;
+---
+
+<div class="spotify-panel" data-spotify-panel>
+  <SpotifyEmbed compacto={compacto} />
+  <div class="spotify-cuenta">
+    <div class="spotify-cuenta-acciones">
+      <a
+        class="spotify-conectar"
+        href="/api/spotify/login"
+        data-spotify-conectar
+        data-en="Connect"
+      >
+        Conectar
+      </a>
+      <button
+        class="spotify-salir"
+        type="button"
+        data-spotify-logout
+        hidden
+        data-en="Disconnect"
+      >
+        Desconectar
+      </button>
+    </div>
+    <p class="spotify-cuenta-estado" data-spotify-estado hidden></p>
+  </div>
+</div>
+
+<script>
+  import "../scripts/spotify-player";
+</script>

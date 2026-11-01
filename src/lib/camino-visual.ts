@@ -24,12 +24,6 @@ import fachadaIbm from "../assets/recorrido/lugares/04-ibm-inicial.webp";
 import fachadaOrt from "../assets/recorrido/lugares/04b-ort.webp";
 import fachadaTiendamia from "../assets/recorrido/lugares/05-tiendamia.webp";
 import fachadaIbmHoy from "../assets/recorrido/lugares/06-ibm-actual.webp";
-import logoJuan from "../assets/recorrido/logos/juan-xxiii.png";
-import logoMaturana from "../assets/recorrido/logos/maturana.png";
-import logoIsbo from "../assets/recorrido/logos/isbo.png";
-import logoIbm from "../assets/recorrido/logos/ibm.webp";
-import logoOrt from "../assets/recorrido/logos/universidad-ort-uruguay-logo.png";
-import logoTiendamia from "../assets/recorrido/logos/tiendamia.jpg";
 
 export type Figura = {
   id: string;
@@ -53,21 +47,8 @@ export const figuras: Figura[] = [
   { id: "frente", quieto: frente, escala: 1 },
 ];
 
-export type Recorte = {
-  x: number;
-  y: number;
-  ancho: number;
-  alto: number;
-  lienzoAncho: number;
-  lienzoAlto: number;
-};
-
 export type EscenaLugar = {
   fachada: ImageMetadata;
-  logo?: ImageMetadata;
-  /** Posición del logo sobre el cartel, en porcentajes del marco 3/2. */
-  logoEstilo?: string;
-  recorte?: Recorte;
 };
 
 /**
@@ -156,46 +137,29 @@ export function cssDelCamino(slugs: string[]): string {
 export const escenas: Record<string, EscenaLugar> = {
   maturana: {
     fachada: fachadaMaturana,
-    logo: logoMaturana,
-    logoEstilo: "left:59%;top:43%;width:9.2%",
   },
   "canal-5": {
     fachada: fachadaCanal,
   },
   "maturana-liceo": {
     fachada: fachadaMaturana,
-    logo: logoMaturana,
-    logoEstilo: "left:59%;top:43%;width:9.2%",
   },
   "juan-xxiii": {
     fachada: fachadaJuan,
-    logo: logoJuan,
-    logoEstilo: "left:65.2%;top:61.2%;width:8.4%",
   },
   "brazo-oriental": {
     fachada: fachadaIsbo,
-    logo: logoIsbo,
-    logoEstilo: "left:51.5%;top:47.5%;width:12%",
   },
   ibm: {
     fachada: fachadaIbm,
-    logo: logoIbm,
-    logoEstilo: "left:56.5%;top:69.2%;width:16%",
   },
   ort: {
     fachada: fachadaOrt,
-    logo: logoOrt,
-    logoEstilo: "left:36.6%;top:71.8%;width:9%",
   },
   tiendamia: {
     fachada: fachadaTiendamia,
-    logo: logoTiendamia,
-    logoEstilo: "left:52.5%;top:47%;width:22.2%",
-    recorte: { x: 682, y: 584, ancho: 1194, alto: 326, lienzoAncho: 2560, lienzoAlto: 1440 },
   },
   "ibm-hoy": {
     fachada: fachadaIbmHoy,
-    logo: logoIbm,
-    logoEstilo: "left:60%;top:73.5%;width:15%",
   },
 };

@@ -4,11 +4,13 @@ import Base from "../layouts/Base.astro";
 import Caminante from "../components/Caminante.astro";
 import Diamante from "../components/Diamante.astro";
 import PasoFondo from "../components/PasoFondo.astro";
+import SpotifyPanel from "../components/SpotifyPanel.astro";
 import Voces from "../components/Voces.astro";
 import retrato from "../assets/estudio/leo-guitarra.jpg";
 import retratoHoy from "../assets/estudio/leo-hoy.jpg";
 import rocasHoy from "../assets/estudio/marco-rosa-rocas-hoy.webp";
 import { cssDelCamino, escenas } from "../lib/camino-visual";
+import { flecha } from "../lib/flechas";
 import { lugaresPublicados } from "../lib/lugares";
 import { sitio } from "../site";
 
@@ -23,25 +25,60 @@ const pasos = await lugaresPublicados();
   <section class="biografia" aria-labelledby="biografia-titulo">
     <div class="biografia-texto">
       <p class="biografia-indice" data-en={`My story · ${sitio.lugarEn.replace(/\.$/, "")}`}>Mi historia · {sitio.lugar.replace(/\.$/, "")}</p>
-      <h1 id="biografia-titulo" class="biografia-titulo" data-en="From 1994">De 1994 <em data-en="to today.">hasta hoy.</em></h1>
+      <h1 id="biografia-titulo" class="biografia-titulo">
+        <span data-en="From">De</span>{" "}
+        <span class="biografia-anio-fila">
+          <span class="biografia-anio">1994</span>
+          <a
+            class="biografia-sonido"
+            href="#banda-sonora"
+            aria-label="Conoceme con sonido."
+            data-en-aria-label="Meet me with sound."
+          >
+            <span class="biografia-sonido-nota" aria-hidden="true">♪</span>
+            <span class="biografia-sonido-tip" aria-hidden="true" data-en="Meet me with sound.">Conoceme con sonido.</span>
+          </a>
+        </span>
+        <em data-en="to today.">hasta hoy.</em>
+      </h1>
       <div class="biografia-bloque">
-        <p class="biografia-entrada" data-en="Hi. I've been working in software for more than ten years.">Hola. Hace más de diez años que trabajo en software.</p>
+        <p class="biografia-entrada" data-en="Hi! I've been working in software for more than 10 years.">Hola! Hace más de 10 años que trabajo en&nbsp;software.</p>
         <p
           class="biografia-parrafo"
-          data-en="I started as a QA. If software quality left me with anything, it's walking around with my eyes wide open: understanding what should happen, questioning what doesn't add up, and thinking about what I can build so it actually serves someone. Having an idea is one thing. Making it work is another."
+          data-en="I started as a QA in 2015, grew into automation and team leadership, and over time I got deeper into building applications and AI-powered solutions."
         >
-          Empecé como QA. Si hay algo que me dejó la calidad, es andar con los ojos bien abiertos: entender qué debería pasar, cuestionar lo que no termina de cerrar y pensar qué construir para que realmente le sirva a alguien. Porque una cosa es tener una idea y otra es hacer que funcione.
+          Empecé como QA en 2015, fui creciendo en automatización y liderazgo de equipos, y con el tiempo me fui metiendo cada vez más en el desarrollo de aplicaciones y soluciones con&nbsp;IA.
+        </p>
+        <p
+          class="biografia-parrafo"
+          data-en="If software quality left me with anything, it's walking around with my eyes wide open. I love figuring out what should happen, questioning what doesn't quite add up, and almost always ending up thinking about what I can build to fix it. Having a good idea is one thing. Making it work — and making it actually useful to someone — is another."
+        >
+          Si hay algo que me dejó la calidad de software, es andar con los ojos bien abiertos. Me encanta entender qué debería pasar, cuestionar lo que no termina de cerrar y casi siempre termino pensando en qué puedo construir para solucionarlo. Porque una cosa es tener una buena idea y otra es hacer que funcione y que realmente le sirva a&nbsp;alguien.
+        </p>
+        <p
+          class="biografia-parrafo"
+          data-en="Today I enjoy being involved across the whole path: understanding people, understanding needs, turning ideas into solutions, making decisions, building, validating, and shipping to production. I'm not interested in defining myself by any one technology, but by what I can do with it."
+        >
+          Hoy disfruto involucrarme en todo el recorrido: entender a las personas, entender necesidades, transformar ideas en soluciones, tomar decisiones, construir, validar y llevarlas a producción. No me interesa definirme por una tecnología en particular, sino por lo que puedo hacer con&nbsp;ella.
+        </p>
+        <p
+          class="biografia-parrafo"
+          data-en="But if there's something I enjoy as much as building, it's sharing it with people who have that same drive. It might sound odd, but I love seeing that spark in someone's eyes when they get excited about an idea. When a team dares to try, to get it wrong, to learn and try again. Win or lose, I stay with the ones who step onto the field and give it everything."
+        >
+          Pero si hay algo que disfruto tanto como construir, es compartirlo con personas que tengan esas mismas ganas. Tal vez sea extraño, pero amo ver ese brillo en los ojos cuando alguien se entusiasma con una idea. Cuando un equipo se anima a probar, a equivocarse, a aprender y volver a intentar. Ganemos o perdamos, me quedo con los que entran a la cancha y lo dan&nbsp;todo.
+        </p>
+        <p
+          class="biografia-parrafo"
+          data-en="I like surrounding myself with curious people who question, who imagine new things, and who don't stop at just wanting to make them."
+        >
+          Me gusta rodearme de gente curiosa, que cuestiona, que imagina cosas nuevas y que no se queda solamente con las ganas de&nbsp;hacerlas.
         </p>
         <p class="biografia-parrafo">
-          <span data-en="Here I only show some pieces and the path. ">Acá solo muestro algunas piezas y el recorrido. </span>
+          <span data-en="Here I show some pieces from my work and the path I've walked. ">Acá muestro algunas piezas de mi trabajo y del camino que&nbsp;recorrí. </span>
           <a href="#detras" data-en="Further down">Más abajo</a>
-          <span data-en=" you'll find others, more personal, that are part of me too. The craft lives in what got made. The story behind all that is something else."> encontrarás otras, más personales, que también me integran. Porque una cosa es el oficio, que se ve en lo hecho. Y otra, la historia detrás de todo eso.</span>
-        </p>
-        <p
-          class="biografia-parrafo"
-          data-en="And if there's something I enjoy as much as building, it's sharing it. I love that spark when someone gets excited about an idea. When a team dares to try, to get it wrong, to learn and try again. Win or lose, I stay with the ones who step onto the field and give it everything."
-        >
-          Y si hay algo que disfruto tanto como construir, es compartirlo. Me encanta ese brillo cuando alguien se entusiasma con una idea. Cuando un equipo se anima a probar, a equivocarse, a aprender y volver a intentar. Ganemos o perdamos, me quedo con los que entran a la cancha y lo dan todo.
+          <span data-en=" there are others, more personal, that are part of me too."> hay otras, más personales, pero que también forman parte de&nbsp;mí.</span>
+          <br />
+          <span data-en="Because the craft is one thing — you see it in what got made. The story behind all that is something else.">Porque una cosa es el oficio, que se ve en los hechos. Y otra, la historia detrás de todo&nbsp;eso.</span>
         </p>
       </div>
     </div>
@@ -54,7 +91,7 @@ const pasos = await lugaresPublicados();
         alt="Leonardo de niño con una guitarra de juguete"
         data-en-alt="Leonardo as a child with a toy guitar"
         widths={[360, 560, 800]}
-        sizes="(max-width: 40rem) min(76vw, 17rem), 18.5rem"
+        sizes="(max-width: 40rem) min(82vw, 19.25rem), 21rem"
         format="webp"
         quality={80}
         loading="eager"
@@ -99,6 +136,15 @@ const pasos = await lugaresPublicados();
         </g>
       </svg>
     </figure>
+    <div
+      class="banda-sonora"
+      id="banda-sonora"
+      role="region"
+      aria-label="Banda sonora"
+      data-en-aria-label="Soundtrack"
+    >
+      <SpotifyPanel compacto />
+    </div>
     <figure class="biografia-archivo biografia-archivo--hoy">
       <span class="biografia-cinta" aria-hidden="true"></span>
       <Image
@@ -107,7 +153,7 @@ const pasos = await lugaresPublicados();
         alt="Leonardo Pedreira, retrato de hoy"
         data-en-alt="Leonardo Pedreira, present-day portrait"
         widths={[360, 560, 800]}
-        sizes="(max-width: 40rem) min(76vw, 17rem), 18.5rem"
+        sizes="(max-width: 40rem) min(82vw, 19.25rem), 21rem"
         format="webp"
         quality={80}
         loading="eager"
@@ -119,7 +165,7 @@ const pasos = await lugaresPublicados();
           src={rocasHoy}
           alt=""
           widths={[180, 280, 360]}
-          sizes="(max-width: 40rem) 28vw, 8rem"
+          sizes="(max-width: 40rem) 32vw, 9rem"
           format="webp"
           quality={80}
           loading="lazy"
@@ -129,7 +175,7 @@ const pasos = await lugaresPublicados();
     </figure>
     </div>
     <a class="salto-viaje historia-salto" href="#recorrido" data-viaje="recorrido-titulo" data-en="The path.">
-      <span aria-hidden="true">↓</span>
+      <span aria-hidden="true">{flecha.abajo}</span>
       El recorrido.
     </a>
   </section>
@@ -157,9 +203,9 @@ const pasos = await lugaresPublicados();
                 </div>
                 <div class="paso-texto">
                   <p class="paso-cuando" data-en={paso.data.cuandoEn}><span class="paso-numero">{String(indice + 1).padStart(2, "0")}</span>{paso.data.cuando}</p>
-                  <h3 class="paso-lugar"><a href={`/acerca/${paso.data.slug}`} data-en={paso.data.lugarEn}>{paso.data.lugar}</a></h3>
+                  <h3 class="paso-lugar"><a href={`/acerca/${paso.data.slug}`} data-en={paso.data.lugarEn}>{paso.data.lugar}<span class="paso-lugar-ir" aria-hidden="true">{flecha.so}</span></a></h3>
                   {
-                    paso.data.slug !== "tiendamia" && (
+                    paso.data.detalle && (
                       <p class="paso-detalle" data-en={paso.data.detalleEn}>{paso.data.detalle}</p>
                     )
                   }
@@ -194,7 +240,7 @@ const pasos = await lugaresPublicados();
     </div>
   </section>
   <div class="camino-cierre">
-    <a href="/contacto" data-en={`${pasos.length + 1} — Let's name it. Write to me.`}>{pasos.length + 1} — Pongámosle nombre. Escribime. <span aria-hidden="true">↗</span></a>
+    <a href="/contacto" data-en={`${pasos.length + 1} — Let's name it. Write to me.`}>{pasos.length + 1} — Pongámosle nombre. Escribime. <span aria-hidden="true">{flecha.ne}</span></a>
   </div>
   <Voces />
   <Diamante />

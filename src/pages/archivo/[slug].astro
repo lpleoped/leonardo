@@ -4,6 +4,7 @@ import Base from "../../layouts/Base.astro";
 import FacetaMosaico from "../../components/FacetaMosaico.astro";
 import { facetasConFicha } from "../../lib/facetas";
 import { mosaicosFaceta, retratosPersona } from "../../lib/faceta-mosaico";
+import { flecha } from "../../lib/flechas";
 import { sitio } from "../../site";
 
 export async function getStaticPaths() {
@@ -38,7 +39,7 @@ const tieneMosaico = Boolean(mosaicosFaceta[faceta.data.slug]);
 >
   <article class="lugar faceta-ficha">
     <header class="lugar-cabecera">
-      <a class="lugar-volver" href="/acerca#detras" data-en="The archive"><span aria-hidden="true">←</span>El archivo</a>
+      <a class="lugar-volver" href="/acerca#detras" data-en="The archive"><span aria-hidden="true">{flecha.izq}</span>El archivo</a>
       <h1 class="lugar-titulo" data-en={faceta.data.tituloEn}>{faceta.data.titulo}</h1>
       <p class="lugar-detalle" data-en={faceta.data.detalleEn}>{faceta.data.detalle}</p>
     </header>
@@ -80,7 +81,7 @@ const tieneMosaico = Boolean(mosaicosFaceta[faceta.data.slug]);
                   <p data-en={persona.notaEn}>{persona.nota}</p>
                   {persona.enlace && (
                     <a class="detras-enlace" href={persona.enlace} rel="noopener noreferrer" target="_blank" data-en={persona.enlaceEtiquetaEn}>
-                      {persona.enlaceEtiqueta} <span aria-hidden="true">↗</span>
+                      {persona.enlaceEtiqueta} <span aria-hidden="true">{flecha.ne}</span>
                     </a>
                   )}
                 </div>
@@ -92,12 +93,26 @@ const tieneMosaico = Boolean(mosaicosFaceta[faceta.data.slug]);
     }
     <ol class="lugar-escenas">
       {
-        faceta.data.escenas.map((escena) => (
-          <li id={escena.id}>
-            <h2 data-en={escena.tituloEn}>{escena.titulo}</h2>
-            <p data-en={escena.textoEn}>{escena.texto}</p>
-          </li>
-        ))
+        faceta.data.escenas.map((escena) => {
+          const nombresDivididos =
+            escena.id === "los-mios" && escena.texto.includes("|")
+              ? escena.texto.split("|").map((nombre) => nombre.trim()).filter(Boolean)
+              : null;
+          return (
+            <li id={escena.id}>
+              <h2 data-en={escena.tituloEn}>{escena.titulo}</h2>
+              {nombresDivididos ? (
+                <ul class="faceta-los-mios" aria-label={escena.texto.replaceAll("|", ", ")}>
+                  {nombresDivididos.map((nombre) => (
+                    <li>{nombre}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p data-en={escena.textoEn}>{escena.texto}</p>
+              )}
+            </li>
+          );
+        })
       }
     </ol>
     {
@@ -124,7 +139,7 @@ const tieneMosaico = Boolean(mosaicosFaceta[faceta.data.slug]);
                 </span>
                 <h2>{video.titulo}</h2>
                 <p data-en={video.notaEn}>{video.nota}</p>
-                <span class="faceta-video-ir" data-en="Watch on YouTube">Ver en YouTube <span aria-hidden="true">↗</span></span>
+                <span class="faceta-video-ir" data-en="Watch on YouTube">Ver en YouTube <span aria-hidden="true">{flecha.ne}</span></span>
               </a>
             </li>
           ))}

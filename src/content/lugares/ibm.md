@@ -5,10 +5,6 @@ cuando: 2015–2021
 cuandoEn: 2015–2021
 lugar: IBM
 lugarEn: IBM
-detalle: Tester de Software.
-detalleEn: Software Tester.
-bajada: El primer trabajo en informática. La puerta la abrió un tutor del proyecto final en el ISBO.
-bajadaEn: The first job in IT. The door was opened by a tutor from the final project at ISBO.
 escenas:
   - id: el-primer-trabajo
     titulo: El primer trabajo

@@ -1,13 +1,18 @@
 docs/
 .cursor/
 
+# Accionables de derechos/assets (solo Leonardo; ver privados/README.md)
+privados/accionables-derechos.txt
+
 node_modules/
 dist/
 .astro/
 
 .env
 .env.*
+!.env.example
 
 *.log
 .DS_Store
 Thumbs.db
+.vercel

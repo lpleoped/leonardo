@@ -14,16 +14,17 @@ import fachadaCanal from "../assets/recorrido/canal-5/Canal-5.webp";
 import logoBanda from "../assets/recorrido/canal-5/img-6574.jpg";
 import micCanal from "../assets/recorrido/canal-5/img-6583.png";
 import escenarioCanal from "../assets/recorrido/canal-5/img-6584.png";
-import equipoIbm from "../assets/recorrido/ibm/equipo-almuerzo.jpg";
-import cenaIbmHoy from "../assets/recorrido/ibm-hoy/cena-equipo.jpg";
-import reunionIbmHoy from "../assets/recorrido/ibm-hoy/reunion-equipo.jpg";
-import mesaIbmHoy from "../assets/recorrido/ibm-hoy/mesa-trabajo.jpg";
-import colombiaAzotea from "../assets/recorrido/tiendamia/colombia-azotea.jpg";
-import mesaCompanero from "../assets/recorrido/tiendamia/mesa-companero.jpg";
-import mesaTrabajo from "../assets/recorrido/tiendamia/mesa-trabajo.jpg";
-import equipoHoodies from "../assets/recorrido/tiendamia/equipo-hoodies.jpg";
-import terrazaMarca from "../assets/recorrido/tiendamia/terraza-marca.jpg";
-import almuerzoEquipo from "../assets/recorrido/tiendamia/almuerzo-equipo.jpg";
+import equipoIbm from "../assets/recorrido/ibm/equipo-almuerzo.webp";
+import cenaIbmHoy from "../assets/recorrido/ibm-hoy/cena-equipo.webp";
+import reunionIbmHoy from "../assets/recorrido/ibm-hoy/reunion-equipo.webp";
+import mesaIbmHoy from "../assets/recorrido/ibm-hoy/mesa-trabajo.webp";
+import colombiaAzotea from "../assets/recorrido/tiendamia/colombia-azotea.webp";
+import mesaCompanero from "../assets/recorrido/tiendamia/mesa-companero.webp";
+import mesaTrabajo from "../assets/recorrido/tiendamia/mesa-trabajo.webp";
+import equipoHoodies from "../assets/recorrido/tiendamia/equipo-hoodies.webp";
+import terrazaMarca from "../assets/recorrido/tiendamia/terraza-marca.webp";
+import almuerzoEquipo from "../assets/recorrido/tiendamia/almuerzo-equipo.webp";
+import reconocimientoTiendamia from "../assets/recorrido/tiendamia/reconocimiento-junio-2022.png";
 import escolaridadOrt from "../assets/recorrido/ort/certificado-escolaridad.png";
 
 export type CeldaMosaico = {
@@ -274,6 +275,15 @@ export const mosaicos: Record<string, MosaicoLugar> = {
         alt: "El equipo grande de Tiendamia en un almuerzo, casi todos con el hoodie de la marca.",
         altEn: "The larger Tiendamia team at lunch, most of them in the brand hoodie.",
         celda: "salida",
+      },
+      {
+        id: "reconocimiento",
+        imagen: reconocimientoTiendamia,
+        alt: "Reconocimiento de junio de 2022 para Leonardo Pedreira como QA Leader de Tiendamia.",
+        altEn: "June 2022 recognition for Leonardo Pedreira as Tiendamia QA Leader.",
+        celda: "reconocimiento",
+        fit: "contain",
+        ratio: "673 / 420",
       },
     ],
   },
