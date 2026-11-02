@@ -72,7 +72,7 @@ function vigente(href: string) {
       >
         {sitio.marca}<span class="marca-punto">.</span>
       </a>
-      <nav class="nav" aria-label="Secciones" data-en-aria-label="Sections">
+      <nav id="menu-principal" class="nav" aria-label="Secciones" data-en-aria-label="Sections" data-menu>
         {
           secciones.map((seccion) => (
             <a href={seccion.href} aria-current={vigente(seccion.href) ? "page" : undefined} data-en={seccion.en}>
@@ -80,17 +80,29 @@ function vigente(href: string) {
             </a>
           ))
         }
-        <button
-          class="idioma"
-          type="button"
-          aria-label="ES / EN, read in English"
-          data-en-aria-label="ES / EN, ver en español"
-          data-idioma
-          hidden
-        >
-          <span lang="es">ES</span><span aria-hidden="true">/</span><span lang="en">EN</span>
-        </button>
       </nav>
+      <button
+        class="idioma"
+        type="button"
+        aria-label="ES / EN, read in English"
+        data-en-aria-label="ES / EN, ver en español"
+        data-idioma
+      >
+        <span lang="es">ES</span><span aria-hidden="true">/</span><span lang="en">EN</span>
+      </button>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Abrir menú"
+        data-en-aria-label="Open menu"
+        aria-controls="menu-principal"
+        aria-expanded="false"
+        data-menu-toggle
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
     </header>
     <main id="contenido">
       <slot />
@@ -154,6 +166,32 @@ function vigente(href: string) {
           try {
             localStorage.setItem("idioma", idioma);
           } catch {}
+        });
+
+        const menu = document.querySelector("[data-menu]");
+        const menuToggle = document.querySelector("[data-menu-toggle]");
+        const enlacesMenu = [...document.querySelectorAll("[data-menu] a")];
+        const cerrarMenu = () => {
+          if (!menu || !menuToggle) return;
+          menu.dataset.abierto = "false";
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.setAttribute("aria-label", raiz.lang === "en" ? "Open menu" : "Abrir menú");
+          menuToggle.classList.remove("is-open");
+        };
+        menuToggle?.addEventListener("click", () => {
+          if (!menu) return;
+          const abierto = menu.dataset.abierto === "true";
+          menu.dataset.abierto = String(!abierto);
+          menuToggle.setAttribute("aria-expanded", String(!abierto));
+          menuToggle.setAttribute(
+            "aria-label",
+            raiz.lang === "en" ? (abierto ? "Open menu" : "Close menu") : abierto ? "Abrir menú" : "Cerrar menú",
+          );
+          menuToggle.classList.toggle("is-open", !abierto);
+        });
+        enlacesMenu.forEach((enlace) => enlace.addEventListener("click", cerrarMenu));
+        window.addEventListener("resize", () => {
+          if (window.matchMedia("(min-width: 40.01rem)").matches) cerrarMenu();
         });
       })();
     </script>
