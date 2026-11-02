@@ -32,6 +32,7 @@ const pasos = await lugaresPublicados();
           <a
             class="biografia-sonido"
             href="#banda-sonora"
+            data-sonido-trigger
             aria-label="Conoceme con sonido."
             data-en-aria-label="Meet me with sound."
           >
@@ -41,6 +42,15 @@ const pasos = await lugaresPublicados();
         </span>
         <em data-en="to today.">hasta hoy.</em>
       </h1>
+      <div
+        class="banda-sonora banda-sonora--inicio"
+        id="banda-sonora"
+        role="region"
+        aria-label="Banda sonora"
+        data-en-aria-label="Soundtrack"
+      >
+        <SpotifyPanel compacto />
+      </div>
       <div class="biografia-bloque">
         <p class="biografia-entrada" data-en="Hi! I've been working in software for more than 10 years.">Hola! Hace más de 10 años que trabajo en&nbsp;software.</p>
         <p
@@ -136,15 +146,6 @@ const pasos = await lugaresPublicados();
         </g>
       </svg>
     </figure>
-    <div
-      class="banda-sonora"
-      id="banda-sonora"
-      role="region"
-      aria-label="Banda sonora"
-      data-en-aria-label="Soundtrack"
-    >
-      <SpotifyPanel compacto />
-    </div>
     <figure class="biografia-archivo biografia-archivo--hoy">
       <span class="biografia-cinta" aria-hidden="true"></span>
       <Image
@@ -183,6 +184,10 @@ const pasos = await lugaresPublicados();
     <div class="camino-recorrido">
       <div class="camino-ventana">
         <div class="camino-fijo">
+          <p class="camino-indicacion" data-camino-indicacion>
+            <span aria-hidden="true">↓</span>
+            <span data-en="Keep scrolling">Seguí bajando</span>
+          </p>
           <div>
             <p class="camino-indice" data-en="The path">El recorrido</p>
             <h2 class="camino-titulo" id="recorrido-titulo" tabindex="-1" data-en="One thing led to another.">Una cosa llevó a la otra.</h2>
@@ -246,6 +251,8 @@ const pasos = await lugaresPublicados();
   <Diamante />
   <script>
     import "../scripts/viaje";
+    import "../scripts/camino";
+    import "../scripts/sonido";
   </script>
   <Fragment set:html={`<style>${cssDelCamino(pasos.map((paso) => paso.data.slug))}</style>`} />
 </Base>

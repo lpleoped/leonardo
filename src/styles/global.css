@@ -44,20 +44,47 @@ button { color: inherit; font: inherit; }
 .site-header {
   position: sticky; top: 0; z-index: 10;
   display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+  min-width: 0;
   min-height: var(--cabecera); padding: 1rem clamp(1.25rem, 4vw, 4.5rem);
   background: var(--papel); border-bottom: 1px solid var(--filete);
 }
-.marca { display: flex; align-items: center; text-decoration: none; font: 650 1.85rem/.9 var(--display); letter-spacing: -.075em; }
+.marca { display: flex; flex: none; align-items: center; text-decoration: none; font: 650 1.85rem/.9 var(--display); letter-spacing: -.075em; }
 .marca-punto { color: var(--acento); }
-.nav { display: flex; align-items: center; gap: clamp(1.2rem, 3vw, 2.75rem); }
+.nav { display: flex; flex: 1 1 auto; min-width: 0; align-items: center; justify-content: flex-end; gap: clamp(1.2rem, 3vw, 2.75rem); overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
 .nav a { position: relative; padding: .55rem 0; font: 500 .8rem var(--display); text-decoration: none; }
+.nav a, .idioma { flex: none; }
 .nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: var(--tinta); transform: scaleX(0); transform-origin: left; }
 .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
-.idioma { display: inline-flex; align-items: center; gap: .3rem; min-height: 2.75rem; padding: 0 0 0 clamp(.9rem, 2vw, 1.5rem); border: 0; border-left: 1px solid var(--filete); background: none; font: 500 .8rem var(--display); cursor: pointer; }
+.idioma { position: sticky; right: 0; display: inline-flex; align-items: center; gap: .3rem; min-height: 2.75rem; padding: 0 0 0 clamp(.9rem, 2vw, 1.5rem); border: 0; border-left: 1px solid var(--filete); background: var(--papel); font: 500 .8rem var(--display); cursor: pointer; }
 .idioma[hidden] { display: none; }
 .idioma [lang] { padding: .15rem 0; }
 html[lang="es"] .idioma [lang="es"], html[lang="en"] .idioma [lang="en"] { font-weight: 700; text-decoration: underline; text-underline-offset: .3em; }
 .idioma:hover { color: var(--acento); }
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: .55rem;
+  border: 1px solid var(--filete);
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+}
+.menu-toggle span {
+  display: block;
+  width: 1.05rem;
+  height: 1px;
+  background: currentColor;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+.menu-toggle span + span { margin-top: .22rem; }
+.menu-toggle.is-open span:first-child { transform: translateY(.33rem) rotate(45deg); }
+.menu-toggle.is-open span:nth-child(2) { opacity: 0; }
+.menu-toggle.is-open span:last-child { transform: translateY(-.33rem) rotate(-45deg); }
 main { width: min(78rem, calc(100% - 6rem)); margin: 0 auto; padding: 4.5rem 0 6rem; }
 main:has(.estudio) { width: min(90rem, 100%); padding: 0 0 5rem; }
 main:has(.camino) { padding-top: 3rem; }
@@ -688,7 +715,6 @@ a:hover { text-decoration-color: var(--acento); }
   outline: 2px solid var(--acento);
   outline-offset: 3px;
 }
-
 @media (prefers-reduced-motion: reduce) {
   .biografia-sonido-tip { transition: none; }
 }
@@ -701,6 +727,22 @@ a:hover { text-decoration-color: var(--acento); }
   font-size: 1.12em;
   font-weight: 480;
   letter-spacing: -.05em;
+}
+
+/* La música se descubre al inicio, sin alterar el lettering del título. */
+.banda-sonora--inicio {
+  width: min(100%, 22rem);
+  margin-top: 1.35rem;
+}
+.banda-sonora--inicio .spotify-panel {
+  display: grid;
+  gap: .35rem;
+}
+.banda-sonora--inicio .spotify-embed {
+  margin: 0;
+}
+.banda-sonora--inicio .spotify-cuenta {
+  justify-items: start;
 }
 
 /* Relato con medida de lectura: no hereda el tamaño del título. */
@@ -771,7 +813,7 @@ a:hover { text-decoration-color: var(--acento); }
   grid-column: 2;
   grid-row: 1;
   display: grid;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto;
   /* Misma altura que el relato: reparte aire Ayer · Spotify · Hoy sin agrandar fotos. */
   align-content: space-between;
   align-items: stretch;
@@ -985,6 +1027,24 @@ html.viaje::before {
   gap: 1.5rem;
   padding: 1rem 1.2rem .75rem;
 }
+.camino-indicacion {
+  position: absolute;
+  top: .8rem;
+  right: 1rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin: 0;
+  color: var(--acento);
+  font-family: var(--display);
+  font-size: .62rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.camino-indicacion span:first-child { font-size: 1.1rem; line-height: .8; }
+.camino-indicacion[data-oculta="true"] { opacity: 0; transform: translateY(-.25rem); }
 .camino-indice { margin-bottom: .55rem; }
 .camino-titulo {
   max-width: 22ch;
@@ -1682,43 +1742,6 @@ html.viaje::before {
   margin: 0;
 }
 
-/* Player entre Ayer y Hoy: play en la columna de fotos, mismo documento → recorrido con audio. */
-.biografia-archivos .banda-sonora {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-}
-.biografia-archivos .banda-sonora .spotify-panel {
-  width: 100%;
-  margin: 0;
-  display: grid;
-  gap: .4rem;
-}
-.biografia-archivos .banda-sonora .spotify-embed {
-  width: 100%;
-  margin: 0;
-}
-.biografia-archivos .banda-sonora .spotify-cuenta {
-  justify-items: center;
-  text-align: center;
-  gap: .35rem;
-}
-.biografia-archivos .banda-sonora .spotify-cuenta-estado {
-  max-width: 100%;
-  font-size: .72rem;
-}
-.biografia-archivos .banda-sonora .spotify-cuenta-acciones {
-  justify-content: center;
-}
-.biografia-archivos .banda-sonora .spotify-conectar,
-.biografia-archivos .banda-sonora .spotify-salir {
-  min-height: 1.85rem;
-  padding: .2rem .55rem;
-  font-size: .65rem;
-}
 .spotify-embed iframe {
   display: block;
   width: 100%;
@@ -2137,6 +2160,20 @@ html.viaje::before {
   }
   .camino-fijo { padding-inline: 1rem; }
   .camino-figura { width: 8.25rem; margin-left: 1rem; }
+  /* Fallback consistente para Safari/navegadores sin scroll-driven animations. */
+  .camino-relato {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: .5rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .camino-relato::-webkit-scrollbar { display: none; }
+  .camino-relato > li {
+    flex: 0 0 min(82vw, 24rem);
+    scroll-snap-align: center;
+  }
   .paso-lugar { font-size: 1.35rem; }
   .paso-detalle { font-size: .88rem; }
   .paso-bajada, .paso-hitos-puntos { font-size: .74rem; }
@@ -2217,7 +2254,8 @@ html.viaje::before {
 }
 
 /* Las pantallas bajas, reduced motion y el fallback conservan la lista completa. */
-@media (prefers-reduced-motion: no-preference) and (min-height: 34rem) {
+@supports (animation-timeline: view()) {
+@media (min-height: 34rem) {
   @supports (animation-timeline: view()) {
     .camino-recorrido {
       /* El último tramo deja la escena quieta antes de soltar la ventana. */
@@ -2339,6 +2377,18 @@ html.viaje::before {
     }
   }
 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @supports (animation-timeline: view()) {
+    .camino-relato,
+    .camino-figura,
+    .caminante .etapa,
+    .etapa-camina .etapa-pasos {
+      animation: none !important;
+    }
+  }
+}
 
 @keyframes caminar {
   0% { background-position: 0 0; }
@@ -2349,6 +2399,121 @@ html.viaje::before {
 @keyframes paso-cuerpo {
   0%, 50%, 100% { transform: translateY(0); }
   25%, 75% { transform: translateY(-0.6px); }
+}
+
+/* El recorrido mobile usa un controlador JS determinista. Así Safari no depende
+   de que view-timeline esté parcialmente implementado en una versión de iOS. */
+@media (max-width: 40rem) {
+  .camino.camino-manual {
+    --encabezado: clamp(9.5rem, 20svh, 11rem);
+    --faja: 10.5rem;
+    --hueco: 0px;
+  }
+  .camino-manual .camino-recorrido {
+    height: calc(var(--ventana-alto) + (var(--pasos) - 1) * var(--distancia) + var(--pausa));
+  }
+  .camino-manual .camino-ventana {
+    position: sticky;
+    top: var(--stick-top);
+    display: grid;
+    grid-template-rows: var(--encabezado) minmax(0, 1fr);
+    height: var(--ventana-alto);
+    overflow: clip;
+    border: 1px solid var(--filete);
+    border-radius: 1rem;
+    background: var(--papel);
+  }
+  .camino-manual .camino-ventana::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: var(--faja);
+    border-top: 1px solid var(--filete);
+    background: color-mix(in srgb, var(--tinta) 12%, var(--papel));
+    pointer-events: none;
+  }
+  .camino-manual .camino-fijo {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-items: start;
+    column-gap: 1rem;
+    min-height: 0;
+    padding-top: .9rem;
+    padding-bottom: .9rem;
+  }
+  .camino-manual .camino-indicacion {
+    position: static;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: start;
+    max-width: none;
+    margin-bottom: .55rem;
+    text-align: left;
+    line-height: 1.25;
+  }
+  .camino-manual .camino-indicacion > span:first-child {
+    display: inline-block;
+    animation: camino-flecha-abajo 1.25s ease-in-out infinite;
+  }
+  .camino-manual .camino-fijo > div { grid-column: 1; grid-row: 2; min-width: 0; }
+  .camino-manual .camino-desde { grid-column: 2; grid-row: 2; margin-top: .15rem; }
+  .camino-manual .camino-figura {
+    position: absolute;
+    z-index: 2;
+    bottom: var(--faja);
+    left: clamp(3rem, 28cqi, 10rem);
+    width: min(9.5rem, 42cqi, calc(var(--escena-alto) * .72));
+    margin: 0;
+  }
+  .camino-manual .camino-relato {
+    position: relative;
+    grid-row: 2;
+    display: flex;
+    gap: 0;
+    width: max-content;
+    min-height: 0;
+    margin-left: 0;
+    transform: translate3d(calc(var(--camino-x, 0px) * -1), 0, 0);
+    will-change: transform;
+  }
+  .camino-manual .camino-relato > li {
+    flex: none;
+    display: grid;
+    grid-template-rows: var(--escena-alto) var(--faja);
+    width: var(--paso);
+    height: 100%;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .camino-manual .camino-relato .paso-escena { height: 100%; aspect-ratio: auto; border: 0; }
+  .camino-manual .camino-relato .paso-texto {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: .7rem 1rem;
+  }
+  .camino-manual .camino-relato .paso-lugar { font-size: clamp(1.15rem, 5cqi, 1.7rem); }
+  .camino-manual .camino-relato .paso-detalle { font-size: clamp(.78rem, 2.8cqi, .92rem); }
+  .camino-manual .camino-relato .paso-hitos li { font-size: clamp(.78rem, 2.8cqi, .95rem); line-height: 1.25; }
+  .camino-manual .camino-relato .paso-bajada { font-size: clamp(.68rem, 2.3cqi, .8rem); }
+  .camino-manual .camino-relato .paso-nota { font-size: clamp(.6rem, 2cqi, .68rem); }
+  .camino-manual .caminante .etapa { transition: opacity .08s linear, transform .08s linear; }
+  .camino-manual .etapa-frente { opacity: 0; }
+}
+
+@keyframes camino-flecha-abajo {
+  0%, 100% { transform: translateY(0); opacity: .7; }
+  50% { transform: translateY(.28rem); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .camino-manual .camino-indicacion > span:first-child { animation: none; }
 }
 
 @media (max-width: 48rem) {
@@ -2403,12 +2568,17 @@ html.viaje::before {
     width: min(82%, 19.25rem);
     margin: 0 auto;
     gap: 1.25rem;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     align-content: start;
     align-self: auto;
     height: auto;
     padding-top: 0;
     padding-left: 0;
+  }
+
+  .banda-sonora--inicio {
+    width: min(100%, 22rem);
+    margin-top: 1.15rem;
   }
 
   .biografia-sonido-tip {
@@ -2508,6 +2678,63 @@ html.viaje::before {
   .estudio-recorte--chiquito { top: 7.85rem; left: 50%; right: auto; --foto-ancho: 4rem; }
   .estudio-recorte--familia { top: 8.05rem; left: 74%; right: auto; --foto-ancho: 4.3rem; }
   .seleccion { grid-row: 3; }
+}
+
+/* En mobile la marca y el idioma permanecen visibles; las secciones viven
+   en un panel desplegable para no comprimir ni cortar la navegación. */
+@media (max-width: 40rem) {
+  .site-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: .65rem;
+    align-items: center;
+  }
+  .marca { min-width: 0; }
+  .idioma {
+    position: static;
+    min-height: 2.75rem;
+    padding: 0;
+    border-left: 0;
+    background: none;
+    font-size: .72rem;
+  }
+  .menu-toggle { display: inline-grid; }
+  .nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: grid;
+    gap: 0;
+    justify-content: stretch;
+    align-items: stretch;
+    padding: .4rem 1rem .7rem;
+    overflow: visible;
+    background: var(--papel);
+    border-bottom: 1px solid var(--filete);
+    box-shadow: 0 .8rem 1.5rem color-mix(in srgb, var(--sombra) 28%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-.5rem);
+    visibility: hidden;
+    transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+  }
+  .nav[data-abierto="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  .nav a {
+    display: flex;
+    align-items: center;
+    min-height: 3.25rem;
+    padding: .7rem 0;
+    border-bottom: 1px solid var(--filete);
+    font-size: .9rem;
+  }
+  .nav a:last-child { border-bottom: 0; }
+  .nav a::after { display: none; }
 }
 
 /* Profundización de un lugar: documento vertical, aparte del trayecto. */
