@@ -95,11 +95,11 @@ function vigente(href: string) {
                   aria-label="Abrir menú Mi historia"
                   data-nav-history-trigger
                 >
-                  <span data-en="My story">Mi historia</span><span class="nav-trigger-icon" aria-hidden="true">↘</span>
+                  <span data-en="My story">Mi historia</span><span class="nav-trigger-icon" aria-hidden="true">↘︎</span>
                 </button>
                 <div class="nav-submenu" id="submenu-historia" data-nav-history-menu hidden>
                   <a class="nav-submenu-intro" href="/acerca">
-                    <span data-en="Overview">Ver la historia completa</span><span aria-hidden="true">↗</span>
+                    <span data-en="Overview">Ver la historia completa</span><span aria-hidden="true">↗︎</span>
                   </a>
                   <ul>
                     {recorrido.map((paso, indice) => (
@@ -110,7 +110,7 @@ function vigente(href: string) {
                             <span data-en={paso.data.lugarEn}>{paso.data.lugar}</span>
                             <small data-en={paso.data.cuandoEn}>{paso.data.cuando}</small>
                           </span>
-                          <span class="nav-submenu-arrow" aria-hidden="true">↗</span>
+                          <span class="nav-submenu-arrow" aria-hidden="true">↗︎</span>
                         </a>
                       </li>
                     ))}
