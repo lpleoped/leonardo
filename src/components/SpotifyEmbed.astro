@@ -8,20 +8,21 @@ interface Props {
 
 const { compacto = false } = Astro.props;
 const { tipo, id, titulo } = sitio.spotify;
-const src = `https://open.spotify.com/embed/${tipo}/${id}?utm_source=generator&theme=0`;
 /* Alturas oficiales Spotify: 152 compacto, 352 lista. */
 const alto = compacto || tipo === "track" ? 152 : 352;
 ---
 
-<figure class="spotify-embed" style={`--spotify-h: ${alto}px`}>
-  <iframe
-    title={titulo}
-    src={src}
-    width="100%"
-    height={alto}
-    frameborder="0"
-    allowfullscreen=""
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-    loading="lazy"
-  ></iframe>
+<figure
+  class="spotify-embed"
+  style={`--spotify-h: ${alto}px`}
+  data-spotify-embed
+  data-spotify-uri={`spotify:${tipo}:${id}`}
+  data-spotify-height={alto}
+  data-spotify-title={titulo}
+>
+  <div aria-label={titulo}></div>
 </figure>
+
+<script>
+  import "../scripts/spotify-embed";
+</script>
