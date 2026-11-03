@@ -3,22 +3,37 @@ import type { EscenaLugar } from "../lib/camino-visual";
 
 interface Props {
   escena?: EscenaLugar;
+  href?: string;
+  label?: string;
 }
 
-const { escena } = Astro.props;
+const { escena, href, label } = Astro.props;
 ---
 
 {
   escena && (
     <div class="paso-marco">
-      <img
-        class="paso-fachada"
-        src={escena.fachada.src}
-        alt=""
-        width={escena.fachada.width}
-        height={escena.fachada.height}
-        decoding="async"
-      />
+      {href ? (
+        <a class="paso-fachada-enlace" href={href} aria-label={label}>
+          <img
+            class="paso-fachada"
+            src={escena.fachada.src}
+            alt=""
+            width={escena.fachada.width}
+            height={escena.fachada.height}
+            decoding="async"
+          />
+        </a>
+      ) : (
+        <img
+          class="paso-fachada"
+          src={escena.fachada.src}
+          alt=""
+          width={escena.fachada.width}
+          height={escena.fachada.height}
+          decoding="async"
+        />
+      )}
     </div>
   )
 }

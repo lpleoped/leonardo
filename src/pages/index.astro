@@ -6,14 +6,22 @@ import { flecha } from "../lib/flechas";
 import { sitio } from "../site";
 
 const [nombre, apellido] = sitio.nombre.split(" ");
+const letras = (texto: string) => [...texto].map((letra, indice) => ({ letra, indice }));
+const letrasMarcadas = (texto: string) => letras(texto);
 ---
 
 <Base titulo={sitio.nombre} descripcion={sitio.frase}>
   <div class="estudio">
   <EstudioFlotante />
   <div class="presentacion">
-    <h1 class="home-nombre">
-      {nombre}<br /><span>{apellido}<span class="nombre-punto">.</span></span>
+    <h1 class="home-nombre" aria-label={sitio.nombre}>
+      <span aria-hidden="true">
+        {letras(nombre).map(({ letra, indice }) => <span class="home-letra" style={`--letra-i: ${indice}`}>{letra}</span>)}
+      </span>
+      <br />
+      <span aria-hidden="true">
+        {letras(apellido).map(({ letra, indice }) => <span class="home-letra" style={`--letra-i: ${indice}`}>{letra}</span>)}<span class="nombre-punto">.</span>
+      </span>
     </h1>
     {
       sitio.rol && (
@@ -23,8 +31,14 @@ const [nombre, apellido] = sitio.nombre.split(" ");
       )
     }
     <p class="home-lema">
-      <span class="home-lema-antes" data-en={sitio.fraseAntesEn}>{sitio.fraseAntes}</span>
-      <span class="home-lema-golpe" data-en={sitio.fraseGolpeEn}>{sitio.fraseGolpe}</span>
+      <span class="home-lema-antes home-interactivo" aria-label={sitio.fraseAntes} data-en-aria-label={sitio.fraseAntesEn}>
+        <span class="home-interactivo-text home-interactivo-text--es" aria-hidden="true">{letrasMarcadas(sitio.fraseAntes).map(({ letra, indice }) => <span class="home-letra" style={`--letra-i: ${indice}`}>{letra === " " ? "\u00a0" : letra}</span>)}</span>
+        <span class="home-interactivo-text home-interactivo-text--en" aria-hidden="true">{letrasMarcadas(sitio.fraseAntesEn).map(({ letra, indice }) => <span class="home-letra" style={`--letra-i: ${indice}`}>{letra === " " ? "\u00a0" : letra}</span>)}</span>
+      </span>
+      <span class="home-lema-golpe home-interactivo" aria-label={sitio.fraseGolpe} data-en-aria-label={sitio.fraseGolpeEn}>
+        <span class="home-interactivo-text home-interactivo-text--es" aria-hidden="true">{letrasMarcadas(sitio.fraseGolpe).map(({ letra, indice }) => <span class="home-letra" style={`--letra-i: ${indice}`}>{letra === " " ? "\u00a0" : letra}</span>)}</span>
+        <span class="home-interactivo-text home-interactivo-text--en" aria-hidden="true">{letrasMarcadas(sitio.fraseGolpeEn).map(({ letra, indice }) => <span class="home-letra" style={`--letra-i: ${indice}`}>{letra === " " ? "\u00a0" : letra}</span>)}</span>
+      </span>
     </p>
     <a class="salto-viaje" href="/acerca" data-en="My story.">
       <span aria-hidden="true">{flecha.abajo}</span>
@@ -34,6 +48,95 @@ const [nombre, apellido] = sitio.nombre.split(" ");
   </div>
   <Galardones />
   <p class="home-acerca">
-    <a href="/acerca" data-en="If you want to know a bit of my story">Si querés conocer un poco de mi historia<span aria-hidden="true">{flecha.ne}</span></a>
+    <a href="/acerca" data-en="If you want to know a little more about me">Si querés conocer un poco más de mi<span aria-hidden="true">{flecha.ne}</span></a>
   </p>
 </Base>
+
+<script is:inline>
+  (() => {
+    const zonas = [...document.querySelectorAll(".home-nombre, .home-interactivo")];
+    const letras = [...document.querySelectorAll(".home-letra")];
+    const prefiereQuietud = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (!zonas.length || !letras.length || prefiereQuietud.matches) return;
+
+    const estados = letras.map(() => ({ x: 0, y: 0, giro: 0 }));
+    let puntero = null;
+    let arrastrando = false;
+    let cuadro = 0;
+
+    const dentroDeUnaZona = (x, y) => zonas.some((zona) => {
+      const rect = zona.getBoundingClientRect();
+      return x >= rect.left - 24 && x <= rect.right + 24 && y >= rect.top - 24 && y <= rect.bottom + 24;
+    });
+
+    const animar = () => {
+      letras.forEach((letra, indice) => {
+        const rect = letra.getBoundingClientRect();
+        const centroX = rect.left + rect.width / 2;
+        const centroY = rect.top + rect.height / 2;
+        let objetivoX = 0;
+        let objetivoY = 0;
+        let objetivoGiro = 0;
+
+        if (puntero) {
+          const distanciaX = puntero.x - centroX;
+          const distanciaY = puntero.y - centroY;
+          const distancia = Math.hypot(distanciaX, distanciaY);
+          const radio = 190;
+          const fuerza = Math.max(0, 1 - distancia / radio);
+
+          if (fuerza) {
+            const direccionX = distanciaX / (distancia || 1);
+            const direccionY = distanciaY / (distancia || 1);
+            objetivoX = -direccionX * fuerza * 26;
+            objetivoY = -direccionY * fuerza * 15;
+            objetivoGiro = -direccionX * fuerza * 7;
+          }
+        }
+
+        const estado = estados[indice];
+        estado.x += (objetivoX - estado.x) * 0.18;
+        estado.y += (objetivoY - estado.y) * 0.18;
+        estado.giro += (objetivoGiro - estado.giro) * 0.18;
+        letra.style.setProperty("--letra-x", `${estado.x.toFixed(2)}px`);
+        letra.style.setProperty("--letra-y", `${estado.y.toFixed(2)}px`);
+        letra.style.setProperty("--letra-giro", `${estado.giro.toFixed(2)}deg`);
+      });
+
+      cuadro = requestAnimationFrame(animar);
+    };
+
+    const actualizarPuntero = (evento) => {
+      const esTactil = evento.pointerType === "touch";
+      if (esTactil && !arrastrando) return;
+      const dentro = dentroDeUnaZona(evento.clientX, evento.clientY);
+      if (dentro || (esTactil && arrastrando)) puntero = { x: evento.clientX, y: evento.clientY };
+      else puntero = null;
+    };
+    zonas.forEach((zona) => {
+      zona.addEventListener("pointerdown", (evento) => {
+        if (evento.pointerType !== "touch") return;
+        arrastrando = true;
+        zona.setPointerCapture?.(evento.pointerId);
+        puntero = { x: evento.clientX, y: evento.clientY };
+      }, { passive: true });
+      zona.addEventListener("pointermove", actualizarPuntero, { passive: true });
+      zona.addEventListener("pointerleave", (evento) => {
+        if (evento.pointerType !== "touch") puntero = null;
+      });
+      zona.addEventListener("pointerup", (evento) => {
+        if (evento.pointerType !== "touch") return;
+        arrastrando = false;
+        puntero = null;
+        zona.releasePointerCapture?.(evento.pointerId);
+      });
+      zona.addEventListener("pointercancel", () => {
+        arrastrando = false;
+        puntero = null;
+      });
+    });
+    window.addEventListener("blur", () => { arrastrando = false; puntero = null; });
+    cuadro = requestAnimationFrame(animar);
+  })();
+</script>

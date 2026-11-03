@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { flecha } from "../lib/flechas";
+import { lugaresPublicados } from "../lib/lugares";
 import { sitio } from "../site";
 
 interface Props {
@@ -16,6 +17,7 @@ const { titulo, tituloEn, descripcion, imagen, prefetch, indexar = true } = Astr
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imagenAbsoluta = imagen ? new URL(imagen, Astro.site).href : undefined;
 const path = Astro.url.pathname;
+const recorrido = await lugaresPublicados();
 const secciones = [
   { href: "/acerca", label: "Mi historia", en: "My story" },
   { href: "/proyectos", label: "Mis proyectos", en: "My projects" },
@@ -42,6 +44,11 @@ function vigente(href: string) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style is:inline>
+      @media (hover: hover) and (pointer: fine) {
+        html, html * { cursor: none !important; }
+      }
+    </style>
     <meta name="theme-color" content="#14110f" />
     <title data-en={tituloEn}>{titulo}</title>
     <meta name="description" content={descripcion} />
@@ -74,11 +81,48 @@ function vigente(href: string) {
       </a>
       <nav id="menu-principal" class="nav" aria-label="Secciones" data-en-aria-label="Sections" data-menu>
         {
-          secciones.map((seccion) => (
-            <a href={seccion.href} aria-current={vigente(seccion.href) ? "page" : undefined} data-en={seccion.en}>
-              {seccion.label}
-            </a>
-          ))
+          secciones.map((seccion) =>
+            seccion.href === "/acerca" ? (
+              <div class="nav-item nav-item--historia" data-nav-history>
+                <button
+                  class="nav-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="submenu-historia"
+                  aria-current={vigente(seccion.href) ? "page" : undefined}
+                  data-en="My story"
+                  data-en-aria-label="Open My story menu"
+                  aria-label="Abrir menú Mi historia"
+                  data-nav-history-trigger
+                >
+                  <span data-en="My story">Mi historia</span><span class="nav-trigger-icon" aria-hidden="true">↘</span>
+                </button>
+                <div class="nav-submenu" id="submenu-historia" data-nav-history-menu hidden>
+                  <a class="nav-submenu-intro" href="/acerca">
+                    <span data-en="Overview">Ver la historia completa</span><span aria-hidden="true">↗</span>
+                  </a>
+                  <ul>
+                    {recorrido.map((paso, indice) => (
+                      <li>
+                        <a href={`/acerca/${paso.data.slug}`} data-en={paso.data.lugarEn}>
+                          <span class="nav-submenu-number">{String(indice + 1).padStart(2, "0")}</span>
+                          <span class="nav-submenu-label">
+                            <span data-en={paso.data.lugarEn}>{paso.data.lugar}</span>
+                            <small data-en={paso.data.cuandoEn}>{paso.data.cuando}</small>
+                          </span>
+                          <span class="nav-submenu-arrow" aria-hidden="true">↗</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <a href={seccion.href} aria-current={vigente(seccion.href) ? "page" : undefined} data-en={seccion.en}>
+                {seccion.label}
+              </a>
+            ),
+          )
         }
       </nav>
       <button
@@ -126,6 +170,10 @@ function vigente(href: string) {
         Marcas, logos e imágenes de terceros pertenecen a sus titulares. Se muestran en contexto biográfico en este sitio personal.
       </p>
     </footer>
+    <div class="cursor" aria-hidden="true" data-cursor>
+      <span class="cursor-ring" data-cursor-ring></span>
+      <span class="cursor-dot" data-cursor-dot></span>
+    </div>
     <script is:inline>
       (() => {
         const raiz = document.documentElement;
@@ -170,13 +218,40 @@ function vigente(href: string) {
 
         const menu = document.querySelector("[data-menu]");
         const menuToggle = document.querySelector("[data-menu-toggle]");
+        const historyItem = document.querySelector("[data-nav-history]");
+        const historyTrigger = document.querySelector("[data-nav-history-trigger]");
+        const historyMenu = document.querySelector("[data-nav-history-menu]");
         const enlacesMenu = [...document.querySelectorAll("[data-menu] a")];
+        const cerrarHistoria = () => {
+          if (!historyItem || !historyTrigger || !historyMenu) return;
+          historyItem.dataset.abierto = "false";
+          historyTrigger.setAttribute("aria-expanded", "false");
+          historyMenu.hidden = true;
+        };
+        const alternarHistoria = () => {
+          if (!historyItem || !historyTrigger || !historyMenu) return;
+          const abierto = historyItem.dataset.abierto === "true";
+          historyItem.dataset.abierto = String(!abierto);
+          historyTrigger.setAttribute("aria-expanded", String(!abierto));
+          historyMenu.hidden = abierto;
+        };
+        historyTrigger?.addEventListener("click", alternarHistoria);
+        document.addEventListener("click", (evento) => {
+          if (historyItem && !historyItem.contains(evento.target)) cerrarHistoria();
+        });
+        document.addEventListener("keydown", (evento) => {
+          if (evento.key === "Escape") {
+            cerrarHistoria();
+            historyTrigger?.focus();
+          }
+        });
         const cerrarMenu = () => {
           if (!menu || !menuToggle) return;
           menu.dataset.abierto = "false";
           menuToggle.setAttribute("aria-expanded", "false");
           menuToggle.setAttribute("aria-label", raiz.lang === "en" ? "Open menu" : "Abrir menú");
           menuToggle.classList.remove("is-open");
+          cerrarHistoria();
         };
         menuToggle?.addEventListener("click", () => {
           if (!menu) return;
@@ -193,6 +268,88 @@ function vigente(href: string) {
         window.addEventListener("resize", () => {
           if (window.matchMedia("(min-width: 40.01rem)").matches) cerrarMenu();
         });
+      })();
+    </script>
+    <script is:inline>
+      (() => {
+        const soporte = window.matchMedia("(hover: hover) and (pointer: fine)");
+        const reducido = window.matchMedia("(prefers-reduced-motion: reduce)");
+        if (!soporte.matches) return;
+
+        const raiz = document.documentElement;
+        const cursor = document.querySelector("[data-cursor]");
+        const ring = document.querySelector("[data-cursor-ring]");
+        const dot = document.querySelector("[data-cursor-dot]");
+        if (!cursor || !ring || !dot) return;
+
+        let posicionGuardada = null;
+        try {
+          posicionGuardada = JSON.parse(sessionStorage.getItem("cursor-position") || "null");
+        } catch {}
+        let x = posicionGuardada?.x ?? -100;
+        let y = posicionGuardada?.y ?? -100;
+        let objetivoX = x;
+        let objetivoY = y;
+        let raf = 0;
+        let visible = false;
+
+        const mover = () => {
+          x += (objetivoX - x) * (reducido.matches ? 1 : 0.2);
+          y += (objetivoY - y) * (reducido.matches ? 1 : 0.2);
+          cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          raf = window.requestAnimationFrame(mover);
+        };
+
+        const estadoDe = (elemento) => {
+          const interactivo = elemento?.closest("a, button, [role='button'], [role='link'], summary, label");
+          const editable = elemento?.closest("input, textarea, select, [contenteditable='true']");
+          const arrastrable = elemento?.closest("[data-cursor='drag'], [draggable='true']");
+          const imagen = elemento?.closest("img, video, figure, [data-cursor='media']");
+          if (editable) return "text";
+          if (arrastrable) return "drag";
+          if (imagen) return "media";
+          if (interactivo) return "action";
+          return "default";
+        };
+
+        const actualizarEstado = (elemento) => {
+          raiz.dataset.cursorState = estadoDe(elemento);
+        };
+
+        const entrar = () => {
+          visible = true;
+          cursor.classList.add("is-visible");
+          if (!raf) raf = window.requestAnimationFrame(mover);
+        };
+
+        const salir = () => {
+          visible = false;
+          cursor.classList.remove("is-visible");
+          raiz.dataset.cursorState = "default";
+        };
+
+        window.addEventListener("pointermove", (evento) => {
+          objetivoX = evento.clientX;
+          objetivoY = evento.clientY;
+          if (!visible) entrar();
+          actualizarEstado(document.elementFromPoint(evento.clientX, evento.clientY));
+        }, { passive: true });
+        window.addEventListener("pointerdown", (evento) => {
+          try {
+            sessionStorage.setItem("cursor-position", JSON.stringify({ x: evento.clientX, y: evento.clientY }));
+          } catch {}
+        }, { passive: true });
+        window.addEventListener("pointerover", entrar, { passive: true });
+        window.addEventListener("pointerout", (evento) => {
+          if (!evento.relatedTarget) salir();
+        }, { passive: true });
+        window.addEventListener("blur", salir);
+        window.addEventListener("pageshow", entrar, { passive: true });
+        reducido.addEventListener?.("change", () => {
+          if (reducido.matches) raiz.dataset.cursorMotion = "reduced";
+        });
+        raiz.dataset.cursorMotion = reducido.matches ? "reduced" : "full";
+        if (posicionGuardada) entrar();
       })();
     </script>
   </body>

@@ -91,6 +91,16 @@ const pasos = await lugaresPublicados();
           <span data-en="Because the craft is one thing — you see it in what got made. The story behind all that is something else.">Porque una cosa es el oficio, que se ve en los hechos. Y otra, la historia detrás de todo&nbsp;eso.</span>
         </p>
       </div>
+      <button
+        class="biografia-expandir"
+        type="button"
+        aria-expanded="false"
+        aria-controls="biografia-relato"
+        data-biografia-expandir
+      >
+        <span data-biografia-expandir-label data-en="Read the full story">Ver más</span>
+        <span class="biografia-expandir-flecha" aria-hidden="true">↓</span>
+      </button>
     </div>
     <div class="biografia-archivos">
     <figure class="biografia-archivo biografia-archivo--entonces">
@@ -204,7 +214,11 @@ const pasos = await lugaresPublicados();
             pasos.map((paso, indice) => (
               <li>
                 <div class="paso-escena">
-                  <PasoFondo escena={escenas[paso.data.slug]} />
+                  <PasoFondo
+                    escena={escenas[paso.data.slug]}
+                    href={`/acerca/${paso.data.slug}`}
+                    label={`Ver ${paso.data.lugar}`}
+                  />
                 </div>
                 <div class="paso-texto">
                   <p class="paso-cuando" data-en={paso.data.cuandoEn}><span class="paso-numero">{String(indice + 1).padStart(2, "0")}</span>{paso.data.cuando}</p>
@@ -253,6 +267,22 @@ const pasos = await lugaresPublicados();
     import "../scripts/viaje";
     import "../scripts/camino";
     import "../scripts/sonido";
+
+    const biografia = document.querySelector<HTMLElement>(".biografia");
+    const relato = document.querySelector<HTMLElement>(".biografia-bloque");
+    const expandir = document.querySelector<HTMLButtonElement>("[data-biografia-expandir]");
+    const etiqueta = expandir?.querySelector<HTMLElement>("[data-biografia-expandir-label]");
+
+    if (biografia && relato && expandir && etiqueta) {
+      relato.id = "biografia-relato";
+      expandir.addEventListener("click", () => {
+        const abierto = biografia.classList.toggle("is-expanded");
+        relato.classList.toggle("is-expanded", abierto);
+        expandir.setAttribute("aria-expanded", String(abierto));
+        etiqueta.textContent = abierto ? "Ver menos" : "Ver más";
+        etiqueta.dataset.en = abierto ? "Read less" : "Read the full story";
+      });
+    }
   </script>
   <Fragment set:html={`<style>${cssDelCamino(pasos.map((paso) => paso.data.slug))}</style>`} />
 </Base>
