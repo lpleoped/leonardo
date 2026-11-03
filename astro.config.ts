@@ -6,9 +6,17 @@ import sitemap from "@astrojs/sitemap";
 // Los hostings marcan CI: publicar con localhost dejaría el canónico roto.
 const vercelHost =
   process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
-const site =
-  process.env.SITE ??
-  (vercelHost ? `https://${vercelHost}` : "http://localhost:4321");
+const siteValue = process.env.SITE ?? vercelHost;
+const site = (() => {
+  if (!siteValue) return "http://localhost:4321";
+
+  const value = siteValue.trim();
+  const scheme = value.match(/^https?:\/\//)?.[0] ?? "https://";
+  const withoutScheme = value.replace(/^https?:\/\//, "");
+  const nestedScheme = withoutScheme.search(/https?:\/\//);
+  const host = nestedScheme === -1 ? withoutScheme : withoutScheme.slice(0, nestedScheme);
+  return `${scheme}${host}`.replace(/\/$/, "");
+})();
 if (process.env.CI && !process.env.SITE && !vercelHost) {
   throw new Error(
     "Falta SITE (o un host de Vercel): definila con el dominio público antes de publicar.",
