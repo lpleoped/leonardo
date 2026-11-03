@@ -39,8 +39,8 @@ export const figuras: Figura[] = [
   { id: "canal", quieto: canalLeo, pasos: canalPasos, escala: 0.81 },
   { id: "maturana", quieto: maturanaLeo, pasos: maturanaPasos, escala: 0.86 },
   { id: "isbo", quieto: isboLeo, pasos: isboPasos, escala: 0.93 },
-  { id: "ibm", quieto: ibmLeo, pasos: ibmPasos, escala: 1 },
-  { id: "tiendamia", quieto: tiendamiaLeo, pasos: tiendamiaPasos, escala: 1 },
+  { id: "ibm", quieto: ibmLeo, pasos: ibmPasos, escala: 0.95 },
+  { id: "tiendamia", quieto: tiendamiaLeo, pasos: tiendamiaPasos, escala: 0.99 },
   { id: "actual", quieto: actual, pasos: actualPasos, escala: 1 },
   { id: "giro-1", quieto: giro1, escala: 1 },
   { id: "giro-2", quieto: giro2, escala: 1 },
@@ -110,8 +110,8 @@ export function cssDelCamino(slugs: string[]): string {
   suma("canal", finInfancia, finCanal, 0.81, "sigue", fade, fade);
   suma("maturana", finCanal, finLiceo, 0.86, "sigue", fade, fade);
   suma("isbo", finLiceo, finIsbo, 0.93, "sigue", fade, fade);
-  suma("ibm", finIsbo, finIbm, 1, "sigue", fade, fade);
-  suma("tiendamia", finIbm, finTienda, 1, "sigue", fade, fadeCierre);
+  suma("ibm", finIsbo, finIbm, 0.95, "sigue", fade, fade);
+  suma("tiendamia", finIbm, finTienda, 0.99, "sigue", fade, fadeCierre);
   suma("actual", finTienda, turno, 1, "sigue", fadeCierre, fundidoGiro);
   suma("giro-1", turno, giro1, 1, "sigue", fundidoGiro, fundidoGiro);
   suma("giro-2", giro1, giro2, 1, "sigue", fundidoGiro, fundidoGiro);

@@ -15,7 +15,7 @@ interface Props {
 
 const { titulo, tituloEn, descripcion, imagen, prefetch, indexar = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const imagenAbsoluta = imagen ? new URL(imagen, Astro.site).href : undefined;
+const imagenAbsoluta = new URL(imagen ?? "/favicon.svg", Astro.site).href;
 const path = Astro.url.pathname;
 const recorrido = await lugaresPublicados();
 const secciones = [
